@@ -102,3 +102,31 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# misc
+.DS_Store
+.vscode/
+desktop.ini
+
+# untracked folder
+dataset/
+output/
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.pdf
+*.run.xml
+*.synctex.gz
+*.toc
+*-blx.bib
+*.acn
+*.xdy

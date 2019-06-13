@@ -1,0 +1,9 @@
+image: rig8f/latex-telepot:latest
+pipelines:
+  default:
+    - step:
+        script:
+          - echo $BUILD_DIR
+          - cd report
+          - arara -v -t 120000 report.tex
+          - python /data/notify.py -t $TOKEN -f report.tex -b $BITBUCKET_BRANCH -c $BITBUCKET_COMMIT -u $FR

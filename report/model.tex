@@ -1,0 +1,45 @@
+% !TEX root = template.tex
+
+\section{Processing Pipeline}
+\label{sec:processing_architecture}
+
+\textbf{On tailoring the paper structure to your needs:} The structure recommended for the previous sections is rather standard and could work for different papers with differing technical content, the structure and the paper content from here on highly depends on the type of paper, possibilities are: mostly based on theoretical analysis, showing experimental design/activity, proposing a new technique and analyzing its performance via experiments or simulation. For the HDA course we deal with machine learning and, in detail, with training and testing neural network architectures to perform some specific inference or classification task. The following structure and comments are specifically addressing this type of technical content.\\
+
+\textbf{Why having this section:} With this section, we start the technical description with a {\it high level} introduction of your work (e.g., processing pipeline). Here, you do not have to necessarily go into the technical details of every block/algorithm of your design, this will be done later as the paper develops. What I would like to see here is a high level description of the approach, i.e., which processing blocks you used, what they do (in words) and how these were concatenated, etc. This section should introduce the reader to your design, explain the different parts/blocks, how they interact and why. You should not delve into technical details for each block, but you should rather explain the big picture. \red{Besides a well written explanation, I often use a nice diagram containing the various blocks and detailing their interrelations.} 
+
+\section{Signals and Features}
+\label{sec:model}
+
+\MR{Being a machine learning paper, I would put here a section describing the signals you have been working on. If possible, you should describe, in order, 1) the measurement setup, 2) how the signals were \mbox{pre-processed} (to remove noise, artifacts, fill gaps or represent them through a constant sampling rate, etc.). After this, you should describe how {\it feature vectors} were obtained from the \mbox{pre-processed} signals. If signals are {\it time series} this also implies stating the segmentation / windowing strategy that was adopted, to then describe how you obtained a feature vector for each time window. Also, if you also experiment with previous feature extraction approaches, you may want to list them as well, in addition to (and before) your own (possibly new) proposal.} 
+
+\MR{Last but not least, this section should also contain information on how you have split the dataset into training and test \mbox{sub-sets}. This will be then recalled within the ``Results'' section.}
+
+\section{Learning Framework}
+\label{sec:learning_framework}
+
+\MR{Here you finally describe the learning strategy / algorithm that you conceived and used to solve the problem at stake. A good diagram to exemplify how learning is carried out is often very useful. In this section, you should describe the learning model, its parameters, any optimization over a given parameter set, etc. You can organize this section in \mbox{sub-sections}. You are free to choose the most appropriate structure.} 
+
+\red{Note that the diagram that you put here differs from that of Section~\ref{sec:processing_architecture} as here you show the details of how your learning framework, or the core of it, is built. In Section~\ref{sec:processing_architecture} you instead provide a high-level description of the involved processing blocks, i.e., you describe the {\it processing flow} and the rationale behind it.} \\
+
+\textbf{On the math typesetting:} there are many Latex tricks that you should use to produce a high quality technical essay. A few are listed below, in random order:
+\begin{itemize}
+\item \textbf{Vectors and matrices:} $x$ is a scalar, whereas $\bm{x}$ (in bold) is a vector, and $\bm{X}$ is a matrix with elements $\bm{X} = [x_{ij}]$. For bold symbols use the \texttt{\textbackslash bm} Latex command, e.g., \texttt{\textbackslash bm(x)}.
+\item \textbf{Operators:} such as $\max$, $\min$, $\arg\!\max$, $\arg\!\min$ and special functions such as $\log(\cdot)$, $\exp(\cdot)$, $\sin(\cdot)$, $\cos(\cdot)$ are obtained through specific latex commands \texttt{\textbackslash min}, \texttt{\textbackslash max}, \texttt{\textbackslash arg\textbackslash!min}, \texttt{\textbackslash arg\textbackslash!max}, \texttt{\textbackslash log}, \texttt{\textbackslash exp}, \texttt{\textbackslash sin}, \texttt{\textbackslash cos}, etc. Use them! $log$, $exp$, $min$, $sin$, $cos$, etc., look ugly.
+\item \textbf{Sets} can be represented through calligraphic fonts, e.g., $\mathcal{S}$, $\mathcal{F}$, $\mathcal{B}$, etc., obtained using the Latex command \texttt{\textbackslash mathcal{\{S\}}}, etc.
+\item \textbf{Equations:} for a single equation use the \texttt{equation} Latex environment. Example: 
+\begin{equation}
+\label{eq:sigmoid}
+\sigma(x) = \frac{1}{1+e^{-x}}.
+\end{equation} 
+Now, using round brackets $($ and $)$ we get
+\begin{equation}
+\label{eq:sigmoid_comma}
+\sigma(x) = (\frac{1}{1+e^{-x}}),
+\end{equation} 
+but this looks ugly, you should use ``\texttt{\textbackslash left (}'' for ``$($'' and ``\texttt{\textbackslash right )}'' for ``$)$'', obtaining
+\begin{equation}
+\sigma(x) = \left ( \frac{1}{1+e^{-x}} \right ).
+\end{equation} 
+\item \textbf{Punctuation:} Displayed equations are usually considered to be part of the preceding sentence and, in turn, they will get the very same punctuation as if they were inline with the text. If the sentence ends in a displayed equation, the equation gets a period ``.'' right after it, see Eq.~(\ref{eq:sigmoid}). iI the equation is instead part of a running sentence, which is continued after it, then the equation may be ended by a ``,'' as in Eq.~(\ref{eq:sigmoid_comma}). Use the standard grammar rules and your good sense of flow to assess how equations should be punctuated, I usually read through as if they were plain text.
+\end{itemize} 
+

@@ -1,0 +1,147 @@
+% arara: pdflatex
+% arara: bibtex
+% arara: pdflatex
+% arara: pdflatex
+\documentclass[10pt, conference, letterpaper]{IEEEtran}
+
+%\usepackage{algorithm}
+%\usepackage{algorithmicx}
+%\usepackage{algpseudocode}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+%\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+%\usepackage{import}
+%\usepackage{multirow}
+\usepackage{cite}
+\usepackage[export]{adjustbox}
+\usepackage{breqn}
+%\usepackage{mathrsfs}
+\usepackage{acronym}
+%\usepackage[keeplastbox]{flushend}
+\usepackage{setspace}
+\usepackage{bm}
+\usepackage{stackengine}
+
+\usepackage{listings}
+
+\lstset{%
+    backgroundcolor=\color[gray]{.85},
+    basicstyle=\small\ttfamily,
+    breaklines = true,
+    keywordstyle=\color{red!75},
+    columns=fullflexible,
+}%
+
+\lstdefinelanguage{BibTeX}{%
+    keywords={%
+        @article,@book,@collectedbook,@conference,@electronic,@ieeetranbstctl,%
+        @inbook,@incollectedbook,@incollection,@injournal,@inproceedings,%
+        @manual,@mastersthesis,@misc,@patent,@periodical,@phdthesis,@preamble,%
+        @proceedings,@standard,@string,@techreport,@unpublished%
+    },
+    comment=[l][\itshape]{@comment},
+    sensitive=false,
+}
+
+% listings settings from classicthesis package by Andr\'{e} Miede
+\lstset{language=[LaTeX]Tex,%C++,
+    keywordstyle=\color{RoyalBlue},%\bfseries,
+    basicstyle=\small\ttfamily,
+    %identifierstyle=\color{NavyBlue},
+    commentstyle=\color{Green}\ttfamily,
+    stringstyle=\rmfamily,
+    numbers=none,%left,%
+    numberstyle=\scriptsize,%\tiny
+    stepnumber=5,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frameround=ftff,
+    frame=single
+    %frame=L
+}
+
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\thesubtable}{\alph{subtable}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\def\delequal{\mathrel{\ensurestackMath{\stackon[1pt]{=}{\scriptscriptstyle\Delta}}}}
+
+\graphicspath{{../images/}}
+\setlength{\belowcaptionskip}{0mm}
+\setlength{\textfloatsep}{8pt}
+
+\newcommand{\eq}[1]{Eq.~\eqref{#1}}
+\newcommand{\fig}[1]{Fig.~\ref{#1}}
+\newcommand{\tab}[1]{Tab.~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+
+\newcommand\MR[1]{\textcolor{blue}{#1}}
+\newcommand\red[1]{\textcolor{red}{#1}}
+
+%\renewcommand{\baselinestretch}{0.98}
+%\renewcommand{\bottomfraction}{0.8}
+%\setlength{\abovecaptionskip}{0pt}
+\setlength{\columnsep}{0.2in}
+
+% \IEEEoverridecommandlockouts\IEEEpubid{\makebox[\columnwidth]{PUT COPYRIGHT NOTICE HERE \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
+
+\title{We Rock the Hizzle and Stuff}
+
+\author{Elia Bonetto \and Filippo Rigotto}
+\thanks{Elia Bonetto and Filippo Rigotto are with the Department of Information Engineering, University of Padova, Italy.
+    Email: \{bonettoe,rigottof\}@dei.unipd.it}
+%\author{Elia Bonetto$^\dag$, Filippo Rigotto$^\ddag$
+%\thanks{$^\dag$Department of Information Engineering, University of Padova, Italy, email: bonettoe@dei.unipd.it}
+%\thanks{$^\ddag$Department of Information Engineering, University of Padova, Italy, email: rigottof@dei.unipd.it}
+%\thanks{Special thanks / acknowledgement go here.}
+%}
+
+\IEEEoverridecommandlockouts
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Future vehicular communication networks call for new solutions to support their capacity demands, by leveraging the potential of the \mbox{millimeter-wave} (\mbox{mm-wave}) spectrum. Mobility, in particular, poses severe challenges in their design, and as such shall be accounted for. A key question in \mbox{mm-wave} vehicular networks is how to optimize the \mbox{trade-off} between directive Data Transmission (DT) and directional Beam Training (BT), which enables it. In this paper, learning tools are investigated to optimize this \mbox{trade-off}. In the proposed scenario, a Base Station (BS) uses BT to establish a \mbox{mm-wave} directive link towards a Mobile User (MU) moving along a road. To control the BT/DT \mbox{trade-off}, a Partially Observable (PO) Markov Decision Process (MDP) is formulated, where the system state corresponds to the position of the MU within the road link. The goal is to maximize the number of bits delivered by the BS to the MU over the communication session, under a power constraint. The resulting optimal policies reveal that adaptive BT/DT procedures significantly outperform \mbox{common-sense} heuristic schemes, and that specific mobility features, such as user position estimates, can be effectively used to enhance the overall system performance and optimize the available system resources.\\
+
+\MR{This is a sample abstract, just to show you an example. It is $204$ words long, I would say an abstract should not be longer than $250$ words and some Transactions journals of the IEEE are currently putting a strict limit of $200$ words. Here, you should briefly state:
+\begin{enumerate}
+\item the technical scenario/field of research and its timeliness/relevance in general,
+\item what you do in the report/paper and why it is important, how it advances the state of the art in its field,
+\item summarize the main and best results of your study/proposal/method,
+\item (optional) how others could benefit from your results for further research, or within commercial products.
+\end{enumerate}
+The abstract should be written in a way that motivates the reader to delve into the paper, but at the same time it should contain enough information to deliver the main message about the paper, so that the reader will now what he/she canfind in the paper even without reading it (as it is the case most of the times). The abstract is a mini-paper on its own and, as such, is a major endeavor to write.}\\
+
+\red{I suggest to write the Abstract at the end, as the very last thing.}
+\end{abstract}
+
+\IEEEkeywords
+Mm-Wave, Vehicular Networks, Optimization, Beam Training, Data Transmission, Partially Observable MDP. \MR{A list of keywords defining the tools and the scenario. I would not go beyond {\it six} keywords.}
+\endIEEEkeywords
+
+
+\input{Intro}
+
+\input{related}
+
+\input{model}
+
+\input{results}
+
+\input{conclusions}
+
+\bibliographystyle{IEEEtran}
+\bibliography{biblio}
+
+\end{document}
