@@ -8,7 +8,7 @@ class ARSDataset():
         self.path = path
         self._create_label_maps()
 
-    def load_dataset(self):
+    def load_dataset(self, body_frame=True, flatten_labels=True, include_time=True):
         # skip processing if saved dataset is requested
         if 'npz' in self.path:
             return self._load_npz(self.path)
@@ -18,11 +18,11 @@ class ARSDataset():
         keys = [ i for i in sorted(self.dataset) if '__' not in i ]
 
         # collect data from all tests
-        imu = np.empty((0,10))
-        labels = np.empty((0,10))
+        imu = np.empty((0,10 if include_time else 9))
+        labels = np.empty((0,10 if include_time else 9))
         for k in keys:
             print('Loading {}:'.format(k).ljust(52,' '), end='')
-            i,l = self._get_single_test_data(k)
+            i,l = self._get_single_test_data(k, body_frame, flatten_labels, include_time)
             imu = np.append(imu, i, axis=0)
             labels = np.append(labels, l)
             print('{} elements'.format(i.shape[0]).rjust(15,' '))
@@ -44,13 +44,14 @@ class ARSDataset():
             'labels': self.labels
         })
 
-    def _get_single_test_data(self, test_key, body_frame=True, flatten_labels=True):
+    def _get_single_test_data(self, test_key, body_frame=True, flatten_labels=True, include_time=True):
         """
         Gets data of a single test from the dataset.
 
         test_key: the key representing the test to process
         body_frame: whether to convert coordinates to body frame, instead of using sensor frame
         flatten_labels: return labels as an array as long as returned sensor data, instead of an array of bounds
+        include_time: whether to include or remove time column from sensor data
         """
 
         imu_data, cosine_matrices, activities, activities_bounds = self.dataset[test_key][0]
@@ -75,6 +76,11 @@ class ARSDataset():
         if body_frame:
             for i, imu in enumerate(imu_data):
                 imu_data[i] = self.convert_body_frame(imu, cosine_matrices[i])
+
+        # remove time column from data
+        if not include_time:
+            imu_data = imu_data[:,1:]
+            cosine_matrices = cosine_matrices[:,1:]
 
         if flatten_labels:
             if body_frame:
