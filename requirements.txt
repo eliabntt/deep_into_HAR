@@ -2,4 +2,5 @@ numpy
 scipy
 sklearn
 matplotlib
+seaborn
 tensorflow-gpu
