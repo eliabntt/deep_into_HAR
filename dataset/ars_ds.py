@@ -4,57 +4,80 @@ import scipy.io
 class ARSDataset():
     """Interface to the ARS dataset."""
 
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, dataset_paths=None):
+        """
+        Initializes the class.
+
+        dataset_paths: single dataset (string type) or list of datasets (list type) to load.
+        """
+
         self._create_label_maps()
 
-    def load_dataset(self, body_frame=True, flatten_labels=True, include_time=True):
-        # skip processing if saved dataset is requested
-        if 'npz' in self.path:
-            return self._load_npz(self.path)
+        if dataset_paths:
+            if type(dataset_paths) == str:
+                self.load_dataset(dataset_paths)
+            elif type(dataset_paths) == list:
+                for path in dataset_paths:
+                    self.load_dataset(path)
+
+    def get(self):
+        """Returns sensor data and labels."""
+        return self.data_dict['imu'], self.data_dict['act']
+
+    def load_dataset(self, path, body_frame=True, include_time=True):
+        """Loads a dataset. Appends new items to old data, if present."""
+
+        # skip processing if saved dataset is passed
+        if 'npz' in path:
+            print('Loading from npz file: {}'.format(path))
+            self._load_npz(path)
+            return self.data_dict['imu'], self.data_dict['act']
 
         # load dataset from matlab mat file
-        self.dataset = scipy.io.loadmat(self.path)
-        keys = [ i for i in sorted(self.dataset) if '__' not in i ]
+        print('\nLoading from mat file: {}'.format(path))
+        dataset = scipy.io.loadmat(path)
+        keys = [ i for i in sorted(dataset) if '__' not in i ]
+
+        # create data dictionary if not present
+        if not hasattr(self, 'data_dict'):
+            self.data_dict = {
+                'imu': np.empty((0,10 if include_time else 9)),
+                'cos': np.empty((0,10 if include_time else 9)),
+                'act': np.empty((0,1), dtype=np.uint8),
+                'ref': 'body' if body_frame else 'sensor'
+            }
 
         # collect data from all tests
-        imu = np.empty((0,10 if include_time else 9))
-        labels = np.empty((0,10 if include_time else 9))
-        for k in keys:
-            print('Loading {}:'.format(k).ljust(52,' '), end='')
-            i,l = self._get_single_test_data(k, body_frame, flatten_labels, include_time)
-            imu = np.append(imu, i, axis=0)
-            labels = np.append(labels, l)
-            print('{} elements'.format(i.shape[0]).rjust(15,' '))
+        for test in keys:
+            print('Loading {}:'.format(test).ljust(52,' '), end='')
+            test_dict = self._get_single_test_data(dataset, test, body_frame, include_time)
 
-        print('Data shape:  {}\nLabel shape: {}'.format(imu.shape, labels.shape))
-        self.imu = imu
-        self.labels = labels
-        return imu, labels
+            # append values to global data dictionary
+            self.data_dict['imu'] = np.append(self.data_dict['imu'], test_dict['imu'], axis=0)
+            self.data_dict['cos'] = np.append(self.data_dict['cos'], test_dict['cos'], axis=0)
+            self.data_dict['act'] = np.append(self.data_dict['act'], test_dict['act'])
+            print('{} elements'.format(test_dict['imu'].shape[0]).rjust(15,' '))
 
     def _load_npz(self, path):
-        d = np.load(path)
-        self.imu = d['imu']
-        self.labels = d['labels']
-        return self.imu, self.labels
+        self.data_dict = np.load(path)
 
     def save_dataset(self, path):
-        np.savez_compressed(path, {
-            'imu': self.imu,
-            'labels': self.labels
-        })
+        """Saves current dataset to npz file."""
 
-    def _get_single_test_data(self, test_key, body_frame=True, flatten_labels=True, include_time=True):
+        print('Saving to npz file: {}'.format(path))
+        np.savez_compressed(path, **self.data_dict)
+
+    def _get_single_test_data(self, dataset, test_key, body_frame=True, include_time=True):
         """
         Gets data of a single test from the dataset.
 
+        dataset: dataset to use
         test_key: the key representing the test to process
-        body_frame: whether to convert coordinates to body frame, instead of using sensor frame
-        flatten_labels: return labels as an array as long as returned sensor data, instead of an array of bounds
+        body_frame: whether to convert coordinates to body frame, instead of using plain sensor frame
         include_time: whether to include or remove time column from sensor data
         """
 
-        imu_data, cosine_matrices, activities, activities_bounds = self.dataset[test_key][0]
+        imu_data, cosine_matrices, activities, activities_bounds = dataset[test_key][0]
 
         # throwing away useless nested arrays
         activities = np.array([ act[0] for act in activities[0] ])
@@ -68,9 +91,8 @@ class ARSDataset():
         activities = np.array([ self.map_encode[a] for a in activities ])
 
         # get a single array of labels instead of labels + bounds
-        if flatten_labels:
-            activities_flat = self._reply_labels(activities, activities_bounds)
-            assert(len(imu_data) == len(activities_flat))
+        activities_flat = self._reply_labels(activities, activities_bounds)
+        assert(len(imu_data) == len(activities_flat))
 
         # convert from sensor frame to body frame
         if body_frame:
@@ -82,16 +104,11 @@ class ARSDataset():
             imu_data = imu_data[:,1:]
             cosine_matrices = cosine_matrices[:,1:]
 
-        if flatten_labels:
-            if body_frame:
-                return imu_data, activities_flat
-            else:
-                return imu_data, cosine_matrices, activities_flat
-        else:
-            if body_frame:
-                return imu_data, activities, activities_bounds
-            else:
-                return imu_data, cosine_matrices, activities, activities_bounds
+        return {
+            'imu': imu_data,
+            'cos': cosine_matrices,
+            'act': activities_flat
+        }
 
     def convert_body_frame(self, imu_data, cosine_matrix):
         """Converts the sensor frames in a single data item to body frames through the cosine matrix."""
@@ -100,30 +117,36 @@ class ARSDataset():
         imu_data[1:4]  = np.dot(C, imu_data[1:4].T)  # acc
         imu_data[4:7]  = np.dot(C, imu_data[4:7].T)  # gyro
         imu_data[7:10] = np.dot(C, imu_data[7:10].T) # mag
-
         return imu_data
 
     def _reply_labels(self, labels, bounds):
         """Builds a single labels array from labels and bounds."""
         start = bounds[0::2]-1 # even positions
         stop  = bounds[1::2]   # -1: numbering starts from 1
+        # start is included, stop is excluded
 
         res = np.zeros(bounds[-1], dtype=np.uint8)
         for i, act in enumerate(labels):
             res[start[i] : stop[i]] = act
-            # start is included, stop is excluded
         return res
 
     def _create_label_maps(self):
         """Builds labels mappings."""
         if hasattr(self,'map_encode') and hasattr(self,'map_decode'): return
 
+        # three dataset can be handled:
+        # - v2 and benchmark share the same labels
+        # - v1 has some specific labels
+
         self.labels = [
-            'RUNNING', 'WALKING', 'JUMPING', 'STNDING', 'SITTING', 'XLYINGX', 'FALLING',
-            'TRANSUP', # getting up from lower position
-            'TRANSDW', # getting down from upper position
-            'TRNSACC', # accelerating
-            'TRNSDCC', # decelerating
+            'RUNNING', 'WALKING', 'JUMPING',
+            'STNDING', 'SITTING', 'XLYINGX', 'FALLING',
+
+            'WALKUPS', 'WALKDWS', # walking up and downstairs, v1-only labels
+            'JUMPVRT', 'JUMPFWD', 'JUMPBCK', # jumping in place, forward and backward
+
+            'TRANSUP', 'TRANSDW', # getting up from lower pos, down from upper pos
+            'TRNSACC', 'TRNSDCC', # accelerating, decelerating
             'TRANSIT'  # other transitions or irrelevant
         ]
 
@@ -137,6 +160,11 @@ class ARSDataset():
         return self.map_decode.copy()
 
 if __name__ == "__main__":
-    # just a test
-    imu_data, labels = ARSDataset('dataset/ARS_DLR_DataSet_V2.mat').load_dataset()
-    print('Loaded')
+    # load mat files and save a single npz file ready to use
+    ds = ARSDataset([
+        'ARS_DLR_DataSet.mat',
+        'ARS_DLR_DataSet_V2.mat',
+        'ARS_DLR_Benchmark_Data_Set.mat'
+    ])
+    ds.save_dataset('ARS_DLR.npz')
+    print('Done.')
