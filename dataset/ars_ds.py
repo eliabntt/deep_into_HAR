@@ -1,3 +1,4 @@
+# DEPRECATED in favor of preprocessing notebook
 import numpy as np
 import scipy.io
 
@@ -138,20 +139,39 @@ class ARSDataset():
         # - v2 and benchmark share the same labels
         # - v1 has some specific labels
 
-        self.labels = [
-            'RUNNING', 'WALKING', 'JUMPING',
-            'STNDING', 'SITTING', 'XLYINGX', 'FALLING',
+        self.map_encode = {
+            'RUNNING': 0,
+            'WALKING': 1,
+            'JUMPING': 2,
+            'STNDING': 3,
+            'SITTING': 4,
+            'XLYINGX': 5,
+            'FALLING': 6,
 
-            'WALKUPS', 'WALKDWS', # walking up and downstairs, v1-only labels
-            'JUMPVRT', 'JUMPFWD', 'JUMPBCK', # jumping in place, forward and backward
+            'WALKUPS': 1, # walking up and downstairs, v1-only labels
+            'WALKDWS': 1, # mapped to walking
 
-            'TRANSUP', 'TRANSDW', # getting up from lower pos, down from upper pos
-            'TRNSACC', 'TRNSDCC', # accelerating, decelerating
-            'TRANSIT'  # other transitions or irrelevant
-        ]
+            'JUMPVRT': 2, # jumping in place, forward and backward
+            'JUMPFWD': 2, # mapped to jumping
+            'JUMPBCK': 2,
 
-        self.map_encode = { l : np.uint8(i) for i,l in enumerate(self.labels) } # str > int
-        self.map_decode = { np.uint8(i) : l for i,l in enumerate(self.labels) } # int > str
+            'TRANSUP': 7, # getting up from lower pos, down from upper pos,
+            'TRANSDW': 7, # accelerating, decelerating,
+            'TRNSACC': 7, # and other transitions all mapped to the same value
+            'TRNSDCC': 7,
+            'TRANSIT': 7
+        }
+
+        self.map_decode = {
+            0: 'running',
+            1: 'walking',
+            2: 'jumping',
+            3: 'standing',
+            4: 'sitting',
+            5: 'lying',
+            6: 'falling',
+            7: 'transition'
+        }
 
     def get_label_encode_map(self):
         return self.map_encode.copy()
