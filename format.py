@@ -55,9 +55,11 @@ def main():
             # outputs cleaning
             if args.clean_output:
                 for cell in notebook['cells']:
-                    cell['execution_count'] = 0
-                    cell['outputs'] = []
-                    cell['metadata']['colab'] = {}
+                    if cell['cell_type'] == 'code':
+                        cell['execution_count'] = 0
+                        cell['outputs'] = []
+                    if 'colab' in cell['metadata']:
+                        cell['metadata']['colab'] = {}
                     if 'executionInfo' in cell['metadata']:
                         del cell['metadata']['executionInfo']
                     if 'outputId' in cell['metadata']:
