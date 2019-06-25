@@ -28,44 +28,11 @@
 \usepackage{bm}
 \usepackage{stackengine}
 
+\usepackage{hyperref}
+\hypersetup{colorlinks} % TODO put usual color
+
 \usepackage{listings}
-
-\lstset{%
-    backgroundcolor=\color[gray]{.85},
-    basicstyle=\small\ttfamily,
-    breaklines = true,
-    keywordstyle=\color{red!75},
-    columns=fullflexible,
-}%
-
-\lstdefinelanguage{BibTeX}{%
-    keywords={%
-        @article,@book,@collectedbook,@conference,@electronic,@ieeetranbstctl,%
-        @inbook,@incollectedbook,@incollection,@injournal,@inproceedings,%
-        @manual,@mastersthesis,@misc,@patent,@periodical,@phdthesis,@preamble,%
-        @proceedings,@standard,@string,@techreport,@unpublished%
-    },
-    comment=[l][\itshape]{@comment},
-    sensitive=false,
-}
-
-% listings settings from classicthesis package by Andr\'{e} Miede
-\lstset{language=[LaTeX]Tex,%C++,
-    keywordstyle=\color{RoyalBlue},%\bfseries,
-    basicstyle=\small\ttfamily,
-    %identifierstyle=\color{NavyBlue},
-    commentstyle=\color{Green}\ttfamily,
-    stringstyle=\rmfamily,
-    numbers=none,%left,%
-    numberstyle=\scriptsize,%\tiny
-    stepnumber=5,
-    numbersep=8pt,
-    showstringspaces=false,
-    breaklines=true,
-    frameround=ftff,
-    frame=single
-    %frame=L
-}
+\input{listings-def}
 
 \renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\thesubtable}{\alph{subtable}}
@@ -92,26 +59,34 @@
 %\setlength{\abovecaptionskip}{0pt}
 \setlength{\columnsep}{0.2in}
 
+% fix for when no cite is in document but want bib to be shown
+\makeatletter
+\def\endthebibliography{%
+  \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+\makeatother
+
 % \IEEEoverridecommandlockouts\IEEEpubid{\makebox[\columnwidth]{PUT COPYRIGHT NOTICE HERE \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
 \IEEEoverridecommandlockouts
 
-\title{We Rock the Hizzle and Stuff}
+\title{Going deep into Human Activity Recognition}
 
 \author{Elia Bonetto, Filippo Rigotto
-\thanks{All authors are with the Department of Information Engineering, University of Padova, Italy. Email: \{bonettoe,rigottof\}@dei.unipd.it}}
+\thanks{All authors are with the Department of Information Engineering, University of Padova, Italy. Email: \{bonettoe, rigottof\}@dei.unipd.it}}
 %\author{Elia Bonetto$^\dag$, Filippo Rigotto$^\ddag$
 %\thanks{$^\dag$Department of Information Engineering, University of Padova, Italy, email: bonettoe@dei.unipd.it}
 %\thanks{$^\ddag$Department of Information Engineering, University of Padova, Italy, email: rigottof@dei.unipd.it}
 %\thanks{Special thanks / acknowledgement go here.}
 %}
 
+\markboth{Bonetto \& Rigotto: Going deep into Human Activity Recognition}{Human Data Analytics, Spring 2019}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Future vehicular communication networks call for new solutions to support their capacity demands, by leveraging the potential of the \mbox{millimeter-wave} (\mbox{mm-wave}) spectrum. Mobility, in particular, poses severe challenges in their design, and as such shall be accounted for. A key question in \mbox{mm-wave} vehicular networks is how to optimize the \mbox{trade-off} between directive Data Transmission (DT) and directional Beam Training (BT), which enables it. In this paper, learning tools are investigated to optimize this \mbox{trade-off}. In the proposed scenario, a Base Station (BS) uses BT to establish a \mbox{mm-wave} directive link towards a Mobile User (MU) moving along a road. To control the BT/DT \mbox{trade-off}, a Partially Observable (PO) Markov Decision Process (MDP) is formulated, where the system state corresponds to the position of the MU within the road link. The goal is to maximize the number of bits delivered by the BS to the MU over the communication session, under a power constraint. The resulting optimal policies reveal that adaptive BT/DT procedures significantly outperform \mbox{common-sense} heuristic schemes, and that specific mobility features, such as user position estimates, can be effectively used to enhance the overall system performance and optimize the available system resources.\\
+TODO
 
 \MR{This is a sample abstract, just to show you an example. It is $204$ words long, I would say an abstract should not be longer than $250$ words and some Transactions journals of the IEEE are currently putting a strict limit of $200$ words. Here, you should briefly state:
 \begin{enumerate}
@@ -126,7 +101,8 @@ The abstract should be written in a way that motivates the reader to delve into 
 \end{abstract}
 
 \IEEEkeywords
-Mm-Wave, Vehicular Networks, Optimization, Beam Training, Data Transmission, Partially Observable MDP. \MR{A list of keywords defining the tools and the scenario. I would not go beyond {\it six} keywords.}
+TODO
+\MR{A list of keywords defining the tools and the scenario. I would not go beyond {\it six} keywords.}
 \endIEEEkeywords
 
 
@@ -140,6 +116,7 @@ Mm-Wave, Vehicular Networks, Optimization, Beam Training, Data Transmission, Par
 
 \input{conclusions}
 
+\nocite{*} % comment to see only cited papers in bib
 \bibliographystyle{IEEEtran}
 \bibliography{biblio}
 
