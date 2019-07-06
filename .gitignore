@@ -109,7 +109,9 @@ venv.bak/
 desktop.ini
 
 # untracked folder
-dataset/ARS*
+dataset/*
+images/*.png
+Graph/
 output/
 
 # LaTeX
