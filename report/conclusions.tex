@@ -1,22 +1,23 @@
-% !TEX root = template.tex
-
-\section{Concluding Remarks}
+% !TEX root = report.tex
+\section{Concluding remarks}
 \label{sec:conclusions}
 
-\red{This section should take max half a page (if you are using for intelligent observations may also be 3/4 of a page :-).}\\
+We delved into HAR testing combinations of learning methods and datasets.
+We found both the applied preprocessing steps %(i.e. augmentation and normalization) 
+to be useful, especially the augmentation techniques.
+Many more of them can be applied, like adding noise to existing data, several ADASYN variations, more effective manual operations or with different quantities and class relative percentages.
+Moreover, it is not clear enough whether normalization is necessary and useful in this particular case.
+Our study lack an investigation about learning and decay rate and newly introduced metrics have not brought significant improvements in our experiments: probably this may change introducing a validation subset.
 
-\MR{In many papers, here you find a summary of what done. It is basically an abstract where instead of using the present tense you use the past participle, as you refer to something that you have already developed in the previous sections. While I did it myself in the past, I now find it rather useless.}\\ 
+Transformations between sensor and body frames are probably much more effective when facing a multi-sensor system and less when dealing with only a single device.
+If this trend is confirmed, it would be interesting, in a multi-sensor scenario, to separately classify activities for each sensor and then merge together the results.
 
-\MR{\textbf{What I would like to see here is:} 
-\begin{enumerate}
-\item a very short summary of what done, 
-\item some (possibly) intelligent observations on the relevance and {\it applicability} of your algorithms / findings, 
-\item what is still missing, and can be added in the future to extend your work.\\
-\end{enumerate}
-The idea is that this section should be {\it useful} and not just a repetition of the abstract (just \mbox{re-phrased} and written using a different tense...).}\\
+Evaluations evidenced the mixed convolutional--recurrent architecture to be the best network to tackle the problem.
+This confirms that mixing architectures is a promising way to proceed both in terms of of performances and time efficiency, which is greatly reduced despite having recurrent cells.
+Our architecture is smaller than the one defined in \cite{Ordonez-CNN-LSTM}, pointing out a possible reduction also on their use case.%, and a possible lack of tuning by our side.
 
-\red{\textbf{Moreover:} being a project report, I would also like to see a specific paragraph specifying: 
-\begin{enumerate}
-\item what you have learned, and 
-\item any difficulties you may have encountered.
-\end{enumerate}}
+We also used autoencoders made of several kind of layers to extract features but results did not improve upon previous findings and we obtained worse results using SVMs and LR.
+We were not able to use the initial framed dataset, or to project along the third dimension instead of the first, and there is space to understand what will be the best way to treat encoded data, i.e. by applying specific networks, Conditional Random Fields (CRF) or RF classifiers, instead of SVM and LR, leaving space for possible improvements.
+
+While fulfilling this report, we learned the power of RNNs on time sequences, along with common guidelines in dataset preparation (framing, normalization and augmentation) and in defining and adjusting trainings' and networks' parameters.
+Notably, even simple networks can achieve stunning results and outperform even complex traditional approaches.%, and the Keras framework greatly helped us in fast prototyping and doing all this in a modular and expandable way.

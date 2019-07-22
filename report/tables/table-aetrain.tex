@@ -1,0 +1,19 @@
+\begin{tabular}{c|cccccc} \toprule
+%{} & \multicolumn{3}{c}{Accuracy} & \multicolumn{3}{c}{Loss} \\
+%{} & CNN-LSTM-AE & CNN\_AE & LSTM-AE & CNN-LSTM-AE & CNN\_AE & LSTM-AE \\\midrule
+%{}   & CNN-LSTM &  CNN  & LSTM  & CNN-LSTM & CNN & LSTM \\\midrule
+%BAHC &      --- & 0.995 &   --- &      --- &  0.250 &     --- \\
+%BNOR &      --- &   --- & 0.994 &      --- &    --- &   0.812 \\
+%SADA &    0.997 & 0.996 & 0.955 &    0.581 &  0.581 &   0.586 \\
+%SAHC &    0.995 & 0.996 & 0.995 &    0.385 &  0.385 &   0.385 \\
+%SFRA &    0.998 & 0.986 & 0.986 &   12.099 & 12.101 &  12.101 \\
+%SNOR &    0.996 & 0.997 & 0.994 &    0.793 &  0.793 &   0.793 \\\bottomrule
+%
+Dataset &     CNN       &    LSTM       &   CNN-LSTM    \\\midrule
+BAHC    & 0.996~~0.250  & 0.994~~0.250  & 0.996~~0.250  \\
+BFRA    & 0.994~~0.812  & 0.993~~0.812  & 0.993~~0.812  \\
+SADA    & 0.996~~0.581  & 0.955~~0.586  & 0.997~~0.581  \\
+SAHC    & 0.996~~0.385  & 0.995~~0.385  & 0.995~~0.385  \\
+SFRA    & 0.997~~0.793  & 0.994~~0.793  & 0.996~~0.793  \\
+SFRAn   & 0.986~~12.101 & 0.986~~12.101 & 0.998~~12.099 \\\bottomrule
+\end{tabular}

@@ -1,44 +1,376 @@
-% !TEX root = template.tex
+% !TEX root = report.tex
 
-\section{Processing Pipeline}
-\label{sec:processing_architecture}
+\section{Processing pipeline}\label{sec:processing_pipeline}
 
-\MR{\textbf{On tailoring the paper structure to your needs:} The structure recommended for the previous sections is rather standard and could work for different papers with differing technical content, the structure and the paper content from here on highly depends on the type of paper, possibilities are: mostly based on theoretical analysis, showing experimental design/activity, proposing a new technique and analyzing its performance via experiments or simulation. For the HDA course we deal with machine learning and, in detail, with training and testing neural network architectures to perform some specific inference or classification task. The following structure and comments are specifically addressing this type of technical content.}\\
+\begin{figure*}
+    \centering
+        \smartdiagramset{
+        border color=none,
+        uniform color list=CornflowerBlue!60 for 6 items,
+        back arrow disabled=true,
+        additions={additional item offset=4mm,
+            additional item shadow=drop shadow,
+            additional item bottom color=CornflowerBlue!60,
+            additional arrow color=CornflowerBlue!60,
+            }
+        }
+        \smartdiagramadd[flow diagram:horizontal]{Raw signals,Preprocessing,Models,Parameters definition,Training,Evaluation}{below of module3/AE, below of module5/SVM/LR}
+        \smartdiagramconnect{->}{additional-module1/module3, additional-module1/additional-module2}
+        \begin{tikzpicture}[remember picture,overlay]% modified from p. 47 of manual
+            \draw[additional item arrow type] (module2) |- ([yshift=-9mm]module2.south) -- (additional-module1);
+            \draw[additional item arrow type] (additional-module1) |- (additional-module1.north) -- (module3);
+            \draw[additional item arrow type] (additional-module2) |- ([xshift=17.5mm]additional-module2.east) -- (module6.south);
+        \end{tikzpicture}\vspace{14mm}
+    \caption{Full processing pipeline from raw signals' dataset to networks evaluation.}
+    \label{fig:full_proc}
+\end{figure*}
 
-\MR{\textbf{Why having this section:} With this section, we start the technical description with a {\it high level} introduction of your work (e.g., processing pipeline). Here, you do not have to necessarily go into the technical details of every block/algorithm of your design, this will be done later as the paper develops. What I would like to see here is a high level description of the approach, i.e., which processing blocks you used, what they do (in words) and how these were concatenated, etc. This section should introduce the reader to your design, explain the different parts/blocks, how they interact and why. You should not delve into technical details for each block, but you should rather explain the big picture.} \red{Besides a well written explanation, I often use a nice diagram containing the various blocks and detailing their interrelations.}
+As mentioned in the introduction, this work uses sensor data collected by the Institute of Communications and Navigation, German Aerospace Center (DLR)\footnote{\url{https://www.dlr.de/kn/desktopdefault.aspx/tabid-12705/22182_read-50785}}, base of the work done in~\cite{FrankNadales}.
+Nonetheless, source code is modular, to enable the possibility to use other datasets, like the well known from UCI\footnote{\url{https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones}}.
+The processing phase of raw signals data, needed to build an usable dataset to feed the networks, is kept at a minimum without using for example filters or noise reduction techniques to avoid distorting too much the dataset, to further prove the usability of non-elaborated features. In the original version, the dataset is not balanced w.r.t. the classes frequency.
+To contrast this, after the generation of training and test sets, augmentation is experimented and used to create two further dataset versions: using a hand-crafted method consisting of random data rotation and shuffling, and an algorithm suited for this task such as ADASYN~\cite{He-ADASYN}.
 
-\section{Signals and Features}
-\label{sec:model}
+In the first part of this work, classification of data is performed using common architectures inspired from the literature: 1D and 2D CNNs, LSTM and GRU-based RNNs.
 
-\MR{Being a machine learning paper, I would put here a section describing the signals you have been working on. If possible, you should describe, in order, 1) the measurement setup, 2) how the signals were \mbox{pre-processed} (to remove noise, artifacts, fill gaps or represent them through a constant sampling rate, etc.). After this, you should describe how {\it feature vectors} were obtained from the \mbox{pre-processed} signals. If signals are {\it time series} this also implies stating the segmentation / windowing strategy that was adopted, to then describe how you obtained a feature vector for each time window. Also, if you also experiment with previous feature extraction approaches, you may want to list them as well, in addition to (and before) your own (possibly new) proposal.}
+A second part of the study involves the generation of features from data thanks both to a stack of convolutional layers and to autoencoders, made of convolutional, LSTM or both kind of layers. Classification is then performed by means of the previous defined networks, generating a mixture of possible configurations, and of other classification algorithms like SVM and logistic regression (LR), using a stochastic gradient descent (SGD) optimization method.
 
-\MR{Last but not least, this section should also contain information on how you have split the dataset into training and test \mbox{sub-sets}. This will be then recalled within the ``Results'' section.}
+To select the best training epoch we have introduced some brand-new metrics to counteract eventual overfitting problems, variability of the training progress and to take into account not only accuracy but also precision and recall scores.
+Validation split was not carried out due to the small dataset size and the fact that augmentation only occurs on the training set: validating over an augmented dataset could have led to overfitting the data, resulting in poor performance.
 
-\section{Learning Framework}
-\label{sec:learning_framework}
+A visual representation of the full process is in \fig{fig:full_proc}.
 
-\MR{Here you finally describe the learning strategy / algorithm that you conceived and used to solve the problem at stake. A good diagram to exemplify how learning is carried out is often very useful. In this section, you should describe the learning model, its parameters, any optimization over a given parameter set, etc. You can organize this section in \mbox{sub-sections}. You are free to choose the most appropriate structure.}
+\section{Signals preprocessing}\label{sec:model}
 
-\red{Note that the diagram that you put here differs from that of Section~\ref{sec:processing_architecture} as here you show the details of how your learning framework, or the core of it, is built. In Section~\ref{sec:processing_architecture} you instead provide a high-level description of the involved processing blocks, i.e., you describe the {\it processing flow} and the rationale behind it.} \\
+\begin{figure}
+\begin{center}
+    \smartdiagramset{
+        border color=none,
+        uniform color list=CornflowerBlue!60 for 6 items,
+        back arrow disabled=true,
+        additions={additional item offset=8mm,
+            additional item shadow=drop shadow,
+            additional item bottom color=CornflowerBlue!60,
+            additional arrow color=CornflowerBlue!60,
+        }
+    }
+    \smartdiagramadd[flow diagram:horizontal]{Raw signals, Flattening, Framing}{below of module1/Splitting, below of module2/Augmentation, below of module3/Normalization}
+    \smartdiagramconnect{->}{additional-module1/additional-module2,additional-module2/additional-module3}
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[additional item arrow type] (module3) |- ([yshift=-3mm]module1.south) -- (additional-module1);
+    \draw[additional item arrow type] (additional-module1) |- ([yshift=-4mm]additional-module3.south) -- (additional-module3);
+  \end{tikzpicture}\vspace{22mm}
 
-\MR{\textbf{On the math typesetting:} there are many Latex tricks that you should use to produce a high quality technical essay. A few are listed below, in random order:
+    \caption{Data preprocessing steps.}
+    \label{fig:preprocessing}
+\end{center}
+\end{figure}
+
+The dataset contains IMU sensor measurements of several scheduled movements and activities taken and labelled by different people.
+The \textsc{xsens MTx} IMU device is positioned on the belt of the user, and collects data at a rate of 100Hz and each measure consists of the snapshot time plus raw readings of an accelerometer, a gyroscope and a magnetometer.
+
+Each sensor outputs 3D data, according to the device reference frame, and also computes the necessary transformation matrix $\bm{T}$ of shape $3\times 3$ to change the reference frame into a body-aligned frame.
+Mathematically, for each sensor data $\bm{v}_s$:
+\[ \begin{bmatrix}x_b\\y_b\\z_b\end{bmatrix} = \bm{v}_b = \bm{T} \bm{v}_s = \bm{T} \begin{bmatrix}x_s\\y_s\\z_s\end{bmatrix} \]
+
+The original 17 tracked activities are grouped and reduced to 8 classes, mislabeling in classification are fixed.
+The composition of samples in the dataset after relabeling is reported in the second column of \tab{tab:act_times}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Minutes for each activity in several versions of the dataset: the original, after framing and after augmentation.}
+    \label{tab:act_times}
+    \begin{tabular}{lccc}\toprule
+                        & \multicolumn{3}{c}{Time} \\
+        \qquad Activity & orig. & framing & augm. \\\midrule
+        \labelbox{label-running} running    &  15 &  30 &  68 \\
+        \labelbox{label-walking} walking    &  72 & 144 & 144 \\
+        \labelbox{label-jumping} jumping    &   8 &  15 &  64 \\
+        \labelbox{label-standing} standing  & 121 & 241 & 241 \\
+        \labelbox{label-sitting} sitting    &  59 & 117 & 117 \\
+        \labelbox{label-lying} lying        &  28 &  56 &  76 \\
+        \labelbox{label-falling} falling    &   2 &   4 &  60 \\
+        \labelbox{label-transit} transition &  60 & --- & --- \\
+        \qquad\quad total                   & 365 & 609 & 772 \\\bottomrule
+    \end{tabular}
+\end{table}
+
+Transitions are pruned from the dataset, and the rest of the data is sorted by activity and then framed in windows of length 128 and an overlapping rate of 50\%. This also implies padding sensor data with zeros to the nearest subsequent multiple of 64, to have entirely filled windows.
+Updated times for each activity are in the third column of \tab{tab:act_times}.
+
+The 70-30\% split of the dataset to obtain training and test sub-sets is done before the eventual augmentation of data, which is performed only on the training set: it is easy to notice from \tab{tab:act_times} that classes in the original dataset are not balanced.
+Two different techniques have been applied to balance them:
 \begin{itemize}
-\item \textbf{Vectors and matrices:} $x$ is a scalar, whereas $\bm{x}$ (in bold) is a vector, and $\bm{X}$ is a matrix with elements $\bm{X} = [x_{ij}]$. For bold symbols use the \texttt{\textbackslash bm} Latex command, e.g., \texttt{\textbackslash bm(x)}.
-\item \textbf{Operators:} such as $\max$, $\min$, $\arg\!\max$, $\arg\!\min$ and special functions such as $\log(\cdot)$, $\exp(\cdot)$, $\sin(\cdot)$, $\cos(\cdot)$ are obtained through specific latex commands \texttt{\textbackslash min}, \texttt{\textbackslash max}, \texttt{\textbackslash arg\textbackslash!min}, \texttt{\textbackslash arg\textbackslash!max}, \texttt{\textbackslash log}, \texttt{\textbackslash exp}, \texttt{\textbackslash sin}, \texttt{\textbackslash cos}, etc. Use them! $log$, $exp$, $min$, $sin$, $cos$, etc., look ugly.
-\item \textbf{Sets} can be represented through calligraphic fonts, e.g., $\mathcal{S}$, $\mathcal{F}$, $\mathcal{B}$, etc., obtained using the Latex command \texttt{\textbackslash mathcal{\{S\}}}, etc.
-\item \textbf{Equations:} for a single equation use the \texttt{equation} Latex environment. Example:
-\begin{equation}
-\label{eq:sigmoid}
-\sigma(x) = \frac{1}{1+e^{-x}}.
-\end{equation}
-Now, using round brackets $($ and $)$ we get
-\begin{equation}
-\label{eq:sigmoid_comma}
-\sigma(x) = (\frac{1}{1+e^{-x}}),
-\end{equation}
-but this looks ugly, you should use ``\texttt{\textbackslash left (}'' for ``$($'' and ``\texttt{\textbackslash right )}'' for ``$)$'', obtaining
-\begin{equation}
-\sigma(x) = \left ( \frac{1}{1+e^{-x}} \right ).
-\end{equation}
-\item \textbf{Punctuation:} Displayed equations are usually considered to be part of the preceding sentence and, in turn, they will get the very same punctuation as if they were inline with the text. If the sentence ends in a displayed equation, the equation gets a period ``.'' right after it, see Eq.~(\ref{eq:sigmoid}). iI the equation is instead part of a running sentence, which is continued after it, then the equation may be ended by a ``,'' as in Eq.~(\ref{eq:sigmoid_comma}). Use the standard grammar rules and your good sense of flow to assess how equations should be punctuated, I usually read through as if they were plain text.
-\end{itemize}}
+    \item using ADASYN~\cite{He-ADASYN} from \textit{imblearn}\footnote{\url{https://imbalanced-learn.readthedocs.io/en/stable/generated/imblearn.over_sampling.ADASYN.html}}: an adaptive algorithm that generate samples according to a density distribution, computed for every minority class. It forces the learning algorithm to focus on difficult examples
+    \item hand-made rotation of some random samples (axis and angle are both randomized) and shuffling inside a window
+\end{itemize}
+In both cases the dataset is rebalanced (only the training set) by bringing the three less-represented classes to have around 30\% of the number of samples of the most represented class, which is \textit{standing}.
+There are some caveats: activities \textit{lying} and \textit{sitting} are not randomly rotated as this may cause labeling errors due to confusion with similar activities like \textit{standing}, and activities \textit{jumping} and \textit{falling} are not subject to permutation because there may be temporal correlation inside the window (a jump read reversed in time may be confused with a fall).
+Adjusted times for both processes are in the fourth column of \tab{tab:act_times}.
+
+Eventually, data is normalized using training set's mean and standard deviation: this is a common procedure in machine learning that might improve accuracy and training.
+
+\section{Learning framework}\label{sec:learning_framework}
+
+We developed networks that works directly processing raw framed signals, and networks that combine automatic feature extraction prior to classification.
+For ``plain'' models we have ultimately chosen four alternatives, based on, but not equal to, previous works in the literature, as they differ in combination and number of layers, kernels size and other parameters.
+%
+For the second part, we explored the combination of CNN and LSTM layers, and we also implemented three alternatives through autoencoders, to be used with SVM, LR and the previously defined networks as classifiers, except one for reasons that will be clear in section~\ref{sssec:ae}.
+
+Combining all these numbers to the six prepared datasets --- with and without normalization, manually augmented, augmented using ADASYN --- for each of the two reference frames, the total number of configurations is $[5+3\times4]\times6\times2=204$\footnote{5 networks, 3 AEs over all but one networks, 6 datasets, 2 reference frames}, excluding SVM and LR tests.
+
+Practically, all the networks are implemented as Keras~\cite{keras2015} models (using TensorFlow~\cite{tensorflow2015} backend).
+Training parameters like the optimizer (SGD\footnote{For more information, we refer the reader to \cite{Ruder-SGDoverview}.}, RMSprop~\cite{Graves-RMSprop} or Adam~\cite{Kingma-Adam}), the loss type, the learning rate, its decay and momentum, the number of epochs and batch size are specified and saved separately from models: this modularity allows to perform tests on the same model with different configurations.
+
+\subsection{Plain models}\label{ssec:plain_models}
+
+Here we review the best models we selected.
+These are only a small part of all the structures we investigated: much more models can be found in the companion Jupyter notebooks, especially regarding fully connected networks (not included here) and CNNs, since experiments with LSTM and GRU units are mostly related to the number of nodes in the cell and to dropout rate values.
+All these models are learned with the Adam optimizer and \textit{categorical crossentropy} loss.
+If not differently specified, default values are employed for learning rate ($0.001$), decay rate ($0$) and other parameters.
+Investigating hyperparameters in this kind of networks is still a major problem, as pointed out in \cite{Hammerla-DeepConvRec}.
+Our values agree with the guidelines defined in the paper.
+Dropout modules are used for regularization and to avoid overfitting data.
+
+\subsubsection{1D CNN}
+
+We developed networks based on one or two convolutional layers, plus one or two dense (fully connected) layer followed by \textit{softmax} activation to have class probabilities, with optional \textit{L2} regularization on convolution kernels and dropout after every layer.
+As per standard practices, each convolutional layer is followed by batch normalization~\cite{Ioffe-BatchNorm}, ReLU activation and max-pooling.
+We additionally included models from surveyed papers~\cite{Chen-SingleAcc,Rueda-CNN}, whose drawbacks have been evidenced in \autoref{sec:related_work}.
+A single convolutional layer is not capable to learn from data, overfitting occurs and validation loss always grows.
+Adding more than one dense layer at the end leads to longer learning time with no substantial gain in accuracy.
+Regularization is not much helpful in CNNs, what keeps the loss stable is dropout, for which the rate is set by trial and error.
+The selected model, which has the highest overall and class-wise accuracies, uses two layers, dropout and a final dense layer, and is reported below.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.5em}
+%[float,caption=1D CNN]
+\begin{lstlisting}
+def <@\textcolor{deeporange}{Conv1D_2C1D_model}@>(input_shape, num_classes=7):
+  return Sequential([
+    Conv1D(filters=64, kernel_size=5, input_shape=input_shape),
+    BatchNormalization(axis=1),
+    Activation('relu'),
+    Dropout(0.3), # rate
+    MaxPooling1D(pool_size=2),
+    Conv1D(32, 5),
+    BatchNormalization(axis=1),
+    Activation('relu'),
+    Dropout(0.3),
+    MaxPooling1D(2),
+    Flatten(),
+    Dense(num_classes, activation='softmax')
+  ], name='Conv1D-2C1D-do0.3')
+\end{lstlisting}
+\vspace*{.2em}
+\end{minipage}
+
+\subsubsection{2D CNN}
+
+We investigated networks from papers \cite{Bevilacqua-CNN} and \cite{Ha-MultiModalCNN}.
+2D convolution can be performed by reshaping data to have the three sensors' signals stacked.
+Input data has shape \texttt{(?,9,128,1)} where 128 is due to the framing operation and the last number is the number of channels, only 1 in this case.
+While the first network is not brilliant and in our preliminary tests achieves only 86\% accuracy, the second instead is a promising setup: as mentioned in \autoref{sec:related_work}, 95\% accuracy is reached by operating the trick to interpose zero-padding to avoid 2D convolution kernels to sweep more than one signal at a time.
+Due to padding, input shape becomes \texttt{(?,18,128,1)}.
+As the selected model, it is reported below.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.2em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{Conv2D_Ha_model}@>(input_shape, num_classes=7):
+  return Sequential([
+    Conv2D(filters=32, kernel_size=(4,4), activation='relu', input_shape=input_shape),
+    MaxPooling2D(pool_size=(3,3), strides=(1,1)),
+    Conv2D(64, (5,5), activation='relu'),
+    MaxPooling2D((3,3),(1,1)),
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dropout(0.5),
+    Dense(num_classes, activation='softmax')
+  ], name='Conv2D-Ha')
+\end{lstlisting}
+\vspace*{.2em}
+\end{minipage}
+
+\subsubsection{LSTM}
+Many tests brought us to set on the model with two LSTM layers, due to improved performance w.r.t. the versions with only one layer. The \textit{bidirectional} configuration is highly dataset-related and very difficult to tune, especially in the number of cells~\cite{Hammerla-DeepConvRec}.
+Models with three layers are too slow and do not improve on the selected model, for this dataset.
+
+Different to what is done in \cite{Pienaar-LSTM}, we dropped one LSTM layer and added dropout instead of manually inserting an L2 regularization term in the structure of the LSTM.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.5em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{TwoLSTM_model}@>(input_shape, num_classes=7):
+  return Sequential([
+    LSTM(512, return_sequences=True, batch_input_shape=input_shape),
+    Dropout(0.2),
+    LSTM(512, return_sequences=False),
+    Dense(num_classes, activation='softmax')
+  ], name='TwoLSTM')
+\end{lstlisting}
+\vspace*{.2em}
+\end{minipage}
+
+\subsubsection{GRU}
+In this case the one-layer model achieves the same performance of the two-layers one, but in a much longer time (circa $3\times$).
+The model with three GRUs instead overfit the data, reaching an accuracy peak slightly lower from the two-layer model, and then performance degrades and loss grows.
+In this last case a study on the learning rate decay would be worth, but nonetheless taking into account the LSTM network's results, the fact that the final model already reach nice overall performance, plus the time needed to train such a network leads in this case to drop further experiments on this architecture.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.5em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{TwoGRU_model}@>(input_shape, num_classes=7):
+  return Sequential([
+    GRU(512, return_sequences=True, input_shape=input_shape),
+    Dropout(0.2),
+    GRU(512, input_shape=input_shape),
+    Dense(num_classes, activation='softmax')
+  ], name='TwoGRU')
+\end{lstlisting}
+\vspace*{.2em}
+\end{minipage}
+
+\subsection{Combined models}\label{ssec:combined_models}
+We explored the possibility of automatically learn features from raw signals by combining a CNN with a LSTM cell and by means of several autoencoder architectures.
+
+\subsubsection{CNN-LSTM stack}
+One ``mixed'' model is obtained by stacking together convolutional and recurrent layers.
+The scope is to get the best from both, so to get sort of a ``preprocessing'' step thanks to convolutions, with the goal of learning features that are then handled and classified by LSTMs, thanks to their time-related capabilities.
+In this case the input has been reshaped in folds of size \texttt{(?,4,32,9)} to use \texttt{TimeDistributed}, that apply the same \texttt{Dense} operation to every timestep of a 3D tensor\footnote{This is implicit since Keras 2.0 but we prefer to specify it anyway.}.
+Moreover, this resulted in an overall speed-up of LSTM layer's training time.
+
+In \cite{Ordonez-CNN-LSTM} the defined network is bigger, featuring two more convolutional layers and one more LSTM, and lack the presence of either dropout and pooling layers. Moreover, the settings about learning and decay rate are different: we use respectively $1\mathrm{e}{\text{--}4}$ and $0$ instead of $1\mathrm{e}{\text{--}2}$ and $0.9$.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.5em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{CNN_LSTM_model}@>(input_shape, num_classes=7):
+  return Sequential([
+    TimeDistributed(Conv1D(256, 1, activation='relu'), input_shape=input_shape),
+    TimeDistributed(Conv1D(256, 3, activation='relu')),
+    TimeDistributed(Dropout(0.1)),
+    TimeDistributed(MaxPooling1D(2)),
+    TimeDistributed(Flatten()),
+    LSTM(128),
+    Dense(num_classes, activation='softmax')
+  ], name='CNN-LSTM')
+\end{lstlisting}
+\vspace*{.5em}
+\end{minipage}
+
+\subsubsection{Autoencoders}\label{sssec:ae}
+They should provide an improved representation of the input data by using learned encoded features instead of raw data. %, but we could not see any notable improvement w.r.t. directly using raw signals.
+They have been constructed by employing only convolutional layers, only LSTM cells and both of them.
+As a first step, data has to be de-framed by a flattening-like operation obtaining sets of shape \texttt{(?\footnote{``?'' is used as wildcard to indicate an unknown number of samples as it depends on the dataset.},1,9)} from \texttt{(?,128,9)}, that is, we process each single measure separately.
+We used the defined networks to perform learning also over the original framed dataset and by expanding the last dimension instead of the first one (obtaining a final shape of \texttt{(?,1,128$\times$9)}), but without obtaining good results.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.2em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{CNN_AE_model}@>(input_shape, num_features):
+  return Sequential([
+    # encoder
+    Conv1D(128, 1, activation='relu', padding='same', input_shape=input_shape),
+    Conv1D(64,  1, activation='relu', padding='same'),
+    # decoder
+    Conv1D(64,  1, activation='relu', padding='same'),
+    Conv1D(128, 1, activation='relu', padding='same'),
+    Conv1D(num_features, 1, activation='softmax')
+  ], name='CNN_AE')
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.2em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{LSTM_AE_model}@>(input_shape, num_features):
+  return Sequential([
+    # encoder
+    LSTM(128, activation='relu', return_sequences=True, input_shape=input_shape),
+    LSTM(64,  activation='relu', return_sequences=True),
+    # decoder
+    LSTM(128, activation='relu', return_sequences=True),
+    TimeDistributed(Dense(num_features, activation='softmax'))
+  ], name='LSTM-AE')
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.2em}
+\begin{lstlisting}
+def <@\textcolor{deeporange}{CNN_LSTM_AE_model}@>(input_shape, num_features):
+  return Sequential([
+    # encoder
+    Conv1D(128, 1, activation='relu', input_shape=input_shape),
+    Conv1D(64,  1, activation='relu'),
+    # decoder
+    LSTM(128, activation='relu', return_sequences=True),
+    TimeDistributed(Dense(num_features, activation='softmax'))
+  ], name='CNN-LSTM-AE')
+\end{lstlisting}
+\end{minipage}
+
+After autoencoders have been trained, the best model with respect to accuracy is selected, the decoder side is discarded, the encoded sequences are reshaped back to the original shape and then fed into the CNN-LSTM stack and each of the classification networks defined in \ref{ssec:plain_models}, except the 2D CNN: its particular configuration and padding as a fundamental and logical preprocessing step make it senseless to use this network coupled with autoencoder features.
+
+We further tried also to perform classification through SVMs and LR thanks to a SGD approximation, defined in \textit{scikit-learn}\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html}}.
+In this case we find out that \textit{alpha}, the multiplier of the regularization term that is also used to compute the initial learning rate, should be in the range $[1\mathrm{e}{\text{--}5},1\mathrm{e}{\text{--}3}]$, with most of the best performance obtained using $1\mathrm{e}{\text{--}4}$.
+We combined both SVM and LR with different kind of regularization: L1, L2 and Elastic Net\footnote{A linear combination of L1 and L2 regularization terms.} have been tested.
+Overall the possible combinations are $3\times2\times6 = 36$, to be added to the previous 204 tests.
+
+\begin{minipage}[c]{.9\columnwidth}
+\vspace*{.5em}
+\begin{lstlisting}
+sklearn.linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.0001)
+# for loss: hinge -> SVM, log -> LR
+# for penalty: 'l2', 'l1', 'elasticnet'
+\end{lstlisting}
+%\vspace*{.5em}
+\end{minipage}
+
+
+\subsection{Metrics}\label{ssec:metrics}
+
+As a multi-class classification problem, to select the best training point (i.e. epoch), beside accuracy, \textit{precision} and \textit{recall} metrics are equally meaningful.
+We very briefly recall their definitions, using \tab{tab:class_mat}: the ratio of true positives to the total predicted positives, and the ratio of true positives to all predictions classified in the same class.
+%  $TP$ ($TP+FP$) ($TP+FN$)
+The \textit{F1-score} is the harmonic average between the two.
+Mathematically,
+\[ P = \frac{TP}{TP+FP} \qquad R = \frac{TP}{TP+FN} \qquad F1 = 2 \times \frac{P\times R}{P+R} \]
+
+\begin{table}[ht]
+    \centering
+    \caption{Sample confusion matrix: actual vs predicted class.}
+    \label{tab:class_mat}
+    \begin{tabular}{c|cc}\toprule
+        & Pos & Neg \\\midrule
+    Pos & TP  & FN  \\
+    Neg & FP  & TN  \\\bottomrule
+    \end{tabular}
+\end{table}
+
+%\begin{tabular}{c|ccc}\toprule
+%          & \multicolumn{3}{c}{Predicted} \\\midrule
+%    \multirow{3}{*}{\rotatebox[origin=c]{90}{Actual}} &     & Pos & Neg \\
+%          & Pos & TP  & FN  \\
+%          & Neg & FP  & TN  \\\bottomrule
+%\end{tabular}
+
+Because of the unbalaced dataset, overall accuracy may be misleading since less frequent classes have low impact on the final value, even if for example classification for these samples fails most of the times.
+This is enhanced by the fact that test set cannot be augmented.
+Because of that, we will focus both on global and per-class metrics, hoping to find a model that maximize each of accuracy values. %, and on loss, that also gives important insights on overfitting.
+
+We introduced these metrics in the training and evaluation phases for all our models, and set up to save a snapshot of the model during training when any of the following quantities (computed on the test set) reach a new maximum:
+\begin{itemize}
+    \item accuracy: $A$
+    \item accuracy over loss: $\mathrm{AoL} = A/L$
+    \item sum of acc., precision and recall: $\mathrm{APR} = (A+P+R)$
+    \item the previous sum, over loss: $\mathrm{APRoL} = (A+P+R)\ /\ L$
+\end{itemize}
+Additionally, the model is also saved when at the end of an epoch accuracy is not higher but near current maximum, and loss is lower than the current stored value.
+
+We choose the sum strategy to globally account for each of the metrics.
+We understand that having a precise scope for the work, for example like fall detection\footnote{Fall detection may be re-thinked as a binary classification problem.}, this reasoning may change a lot, due to possible allowance of false positives and absolute inadmissibility of false negatives.
+But this is a general work without a detailed scope, and it is indifferent for our objectives to have higher precision or recall.
+
+We choose the division by the loss to account for the fact that it is also an important value to track during training: more often a model with slightly less accuracy but lower loss is more powerful than a model with slightly higher accuracy and high loss.
+This is strictly related to the concept of overfitting.

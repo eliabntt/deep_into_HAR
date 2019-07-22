@@ -1,13 +1,37 @@
-% !TEX root = template.tex
+% !TEX root = report.tex
 
-\section{Related Work}
+\section{Related work}
 \label{sec:related_work}
 
-\MR{\begin{itemize}
-\item \textbf{Goal:} The goal of this section is to describe what has been done so far in {\it the} literature. You should focus on and briefly describe the work done in the best papers that you have read.
-\item \textbf{Length:} One full column is fine but often this takes one column and a half. It is very easy to use a full page, although this is because you are sloppy... if you carefully go through the one page long version you often find it is possible to compact it in one column and a half. In any event, I would make this section no longer than one page, this leads to an overall {\it two pages} including abstract, introduction and related work. I believe this is a fair amount of space in most cases.
-\item \textbf{Approach:} For each you should comment on the paper's contribution, on the good and important findings of such paper and also, 1) on why these findings are not enough and 2) how these findings are improved upon/extended by the work that you present here. At the end of the section, you may recap the main paper contributions (maybe one or two, the most important ones) and how these extend/improve upon previous work.
-\item \textbf{References:} please follow this {\it religiously}. It will help you a lot. Use the Latex \texttt{Bibtex} tool to manage the bibliography. A \texttt{Bibtex} example file, named \texttt{biblio.bib} is provided with this template.\\
-\end{itemize}}
-%
-\MR{Note that some of the above fields may not be shown when you compile the Latex file, but this depends on the bibliography settings (dictated by the specific Latex style that you load at the beginning of the document). You may decide to include additional pieces of information in a given bibliographic entry, but please, \textbf{be consistent} across all the entries, i.e., use the same fields for the same publication type. Exceptions are in the (rare) cases where some of the fields are not available (e.g., the paper {\it volume}, {\it number} or the {\it pages}).}
+Activity recognition is a prolific research field and many techniques and algorithms have been used to tackle the subject.
+Delving into sensor-based HAR, the trend in the literature until a few years ago, as per~\cite{Lara-Survey-Wearable}, was to manually craft features and then process them by means of Hidden Markov Models (HMM)~\cite{Liano-HMM}, Principal Component Analysis (PCA), Support Vector Machines (SVM), Bayesian Networks (BN)~\cite{Altun-IMU} or Random Forest (RF) ensembles~\cite{Feng-RF}.
+Features are extracted using filters, Fourier transforms, moments or other statistical properties (like mean and variance) of the signals~\cite{FrankNadales}.
+In this case a heavy preprocessing phase is needed, and these manual features, apart from being most often poorly generalizable, may exclude some important information that can only be extracted by using automatic methods~\cite{Wang-survey}.
+Moreover, these methods focus mainly on single-sequence classification, often lacking the study of the temporal correlation between signals since they rely on per-sequence handcrafted features~\cite{Hammerla-DeepConvRec}.
+Recent advances in machine learning paved the way to raw signal analysis, automatic feature extraction and classification. In this regard, Wang \textit{et al.}~\cite{Wang-survey} very recently surveyed the literature collecting both model architectures and popular datasets.
+%The precedent outdated survey on the topic was redacted by Lara and Labrador~\cite{Lara-Survey-Wearable}, and stops the review of NNs to dense multi-layer perceptrons (MLP), 
+%dedicating most of the work on more traditional approaches.
+%while Bulling \textit{et al.}~\cite{Bulling-Tutorial} authored a broad tutorial exposing relevant research challenges, introducing a framework to design and evaluate activity recognition systems.
+
+Deep convolutional neural networks (CNN) could learn much more high-level and meaningful features while achieving unparalleled performance: their key advantages are the ability to capture local dependencies and resilience to scale changes~\cite{Zeng-CNN} thanks to their ability to extract hidden information from data.
+Temporal 1D convolution is successfully used by Chen and Xue,~\cite{Chen-SingleAcc} who employ a deep CNN with small kernels on data that come only from a single accelerometer.
+Even if it is a promising approach, not considering also gyroscope data may lead to underestimated results: accuracy is expected to be lower when dealing with stationary activities.
+The authors in~\cite{Lee-1dCNNandRF} do the same, but they consider accelerometer vectors' magnitude instead of raw 3D data to reduce rotational interference. %, and evaluate the network against a random forest classifier.
+Moya Rueda \textit{et al.}~\cite{Rueda-CNN} extend the computation considering multiple sensors and organizing data in sliding windows among the set of sensors in parallel.
+The authors in~\cite{Zebin} collect and merge data from 5 sensors fixed to different parts of the body, and compare a CNN, a MLP and a SVM: the deep network is both faster and more accurate.
+2D convolutions are used by Bevilacqua \textit{et al.}~\cite{Bevilacqua-CNN} to account for spatial and temporal dependencies among signals.
+Accelerometer and gyroscope data is stacked and organized in overlapping windows before being fed into a 3-layers convolutional network with small kernels and pooling layers, dropout~\cite{Srivastava-Dropout} and a final 3-layers fully-connected network.
+This novel approach leads to even higher accuracy values.
+A further improvement by Ha \textit{et al.}~\cite{Ha-MultiModalCNN,Ha-MulAccGyro} consists in separating each sensor's data with padding and adjusting the filter size to not simultaneously perform convolution over different sensors.% and to ensure no cross-interference during learning.
+
+The introduction of recurrent networks (RNN), in particular of Long Short-Term Memory (LSTM)~\cite{Hochreiter-LSTM} and Gated Recurrent Unit (GRU)~\cite{Cho-GRU} cells, allowed to learn temporal sequences dependencies more flawlessly by holding memory of past values.
+Thanks to this, recurrent modules are good learners for IMU sensor's data that clearly depends not only from a single value, but from a sequence~\cite{Singh-RNN,Pienaar-LSTM}.
+Both LSTM and GRU have been developed to avoid the vanishing/exploding gradient problem of RNNs, and the difference between them is the number of available \textit{update} gates.
+
+In this field most works use LSTM networks~\cite{Guan-LSTM-wearables}.
+Simple vanilla approaches like stacking LSTM gates one after another showed an improvement over previous CNNs methods thanks to their relation to time sequences, even if working on plain raw signals. 
+An alternative is to use a \textit{bidirectional} network, that is, two LSTMs layers working one on the original sequence (learning from future) and the other one on the reversed version (learning from past), trying to be more robust and essentially doing data augmentation inside the network~\cite{Hammerla-DeepConvRec}.
+This approach is the less adopted because it is highly dependant on the number of units of the LSTM cell and so to the input size and the different datasets.
+Last, experiments mixing convolutional layers before LSTM(s) classification layers took place~\cite{Ordonez-CNN-LSTM}.
+Taking advance from both representation brought by CNNs and temporal dependency by RNNs, results show an improvement with respect to previous methods: a proof that feature extraction techniques before RNNs could be a way to obtain major improvements on HAR and other time-related tasks. 
+GRU layers have been less used for this task, probably because they showed lower overall performances\cite{Park-DNN-smartmultisensor,Arifoglu-RNN-HAR}.

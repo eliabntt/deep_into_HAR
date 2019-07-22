@@ -51,17 +51,137 @@ article{Zordan-2014,
 
 %---------------------------------------------------------------------------------
 
-@article{Bevilacqua-CNN,
+@misc{tensorflow2015,
+    title = {{TensorFlow: Large-Scale Machine Learning on Heterogeneous Systems}},
+    author = {Mart\'{\i}n~Abadi and others},
+    url = {http://tensorflow.org},
+    year = {2015}
+}
+%Ashish~Agarwal and Paul~Barham and Eugene~Brevdo and Zhifeng~Chen and Craig~Citro and Greg~S.~Corrado and Andy~Davis and Jeffrey~Dean and Matthieu~Devin and Sanjay~Ghemawat and Ian~Goodfellow and Andrew~Harp and Geoffrey~Irving and Michael~Isard and Yangqing Jia and Rafal~Jozefowicz and Lukasz~Kaiser and Manjunath~Kudlur and Josh~Levenberg and Dan~Man\'{e} and Rajat~Monga and Sherry~Moore and Derek~Murray and Chris~Olah and Mike~Schuster and Jonathon~Shlens and Benoit~Steiner and Ilya~Sutskever and Kunal~Talwar and Paul~Tucker and Vincent~Vanhoucke and Vijay~Vasudevan and Fernanda~Vi\'{e}gas and Oriol~Vinyals and Pete~Warden and Martin~Wattenberg and Martin~Wicke and Yuan~Yu and Xiaoqiang~Zheng},
+%skippable
+@inproceedings{tensorflow16,
+    title = {{TensorFlow: A system for large-scale machine learning}},
+    author = {Martin Abadi and others},
+    year = {2016},
+    url	= {https://www.usenix.org/system/files/conference/osdi16/osdi16-abadi.pdf},
+    booktitle = {12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 16)},
+    pages	= {265--283}
+}
+%Paul Barham and Jianmin Chen and Zhifeng Chen and Andy Davis and Jeffrey Dean and Matthieu Devin and Sanjay Ghemawat and Geoffrey Irving and Michael Isard and Manjunath Kudlur and Josh Levenberg and Rajat Monga and Sherry Moore and Derek G. Murray and Benoit Steiner and Paul Tucker and Vijay Vasudevan and Pete Warden and Martin Wicke and Yuan Yu and Xiaoqiang Zheng},
+
+%skippable
+@misc{keras2015,
+    title = {Keras},
+    author = {Chollet, Fran\c{c}ois and others},
+    url = {https://keras.io},
+    year = {2015}
+}
+%skippable
+@inproceedings{He-ADASYN,
+    author = {{Haibo He} and {Yang Bai} and E. A. {Garcia} and {Shutao Li}},
+    booktitle = {2008 IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)},
+    title = {{ADASYN: Adaptive synthetic sampling approach for imbalanced learning}},
+    year = {2008},
+    month = jun,
+    volume = {},
+    number = {},
+    pages = {1322-1328},
+    doi = {10.1109/IJCNN.2008.4633969},
+    issn = {2161-4393}
+}
+%skippable
+@article{Ruder-SGDoverview,
+    author    = {Sebastian Ruder},
+    title     = {{An overview of gradient descent optimization algorithms}},
+    year      = {2016},
+    url       = {http://arxiv.org/abs/1609.04747}
+}
+%journal   = {CoRR},
+%volume    = {abs/1609.04747},
+    
+%skippable
+@inproceedings{Kingma-Adam,
+    author = {Diederik P. Kingma and Jimmy Ba},
+    title = {Adam: {A} Method for Stochastic Optimization},
+    booktitle = {3rd International Conference on Learning Representations (ICLR)},
+    location = {San Diego, CA, USA},
+    year = {2015},
+    month = may,
+    url = {http://arxiv.org/abs/1412.6980},
+}
+% series = {ICLR '15},
+
+
+@article{Graves-RMSprop,
+    author    = {Alex Graves},
+    title     = {{Generating Sequences With Recurrent Neural Networks}},
+    year      = {2013},
+    url       = {http://arxiv.org/abs/1308.0850}
+}
+%journal   = {CoRR},
+%volume    = {abs/1308.0850},
+
+%skippable
+@inproceedings{Ioffe-BatchNorm,
+    author = {Ioffe, Sergey and Szegedy, Christian},
+    title = {{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}},
+    booktitle = {Proceedings of the 32nd International Conference on Machine Learning (ICML)},
+    year = {2015},
+    location = {Lille, France},
+    volume = {37},
+    pages = {448--456},
+    numpages = {9},
+    url = {http://dl.acm.org/citation.cfm?id=3045118.3045167}
+}
+% series = {ICML'15},
+
+@article{Srivastava-Dropout,
+    author  = {Nitish Srivastava and Geoffrey Hinton and Alex Krizhevsky and Ilya Sutskever and Ruslan Salakhutdinov},
+    title   = {{Dropout: A Simple Way to Prevent Neural Networks from Overfitting}},
+    journal = {Journal of Machine Learning Research},
+    year    = {2014},
+    volume  = {15},
+    pages   = {1929-1958},
+    url     = {http://jmlr.org/papers/v15/srivastava14a.html}
+}
+
+@article{Hochreiter-LSTM,
+    author = {Hochreiter, Sepp and Schmidhuber, Jürgen},
+    title = {{Long Short-term Memory}},
+    year = {1997},
+    month = dec,
+    pages = {1735-80},
+    volume = {9},
+    journal = {Neural computation},
+    doi = {10.1162/neco.1997.9.8.1735}
+}
+
+@article{Cho-GRU,
+  author    = {Kyunghyun Cho and Bart van Merrienboer and {\c{C}}aglar G{\"{u}}l{\c{c}}ehre and Fethi Bougares and Holger Schwenk and Yoshua Bengio},
+  title     = {{Learning Phrase Representations using {RNN} Encoder-Decoder for Statistical
+               Machine Translation}},
+  year      = {2014},
+  url       = {http://arxiv.org/abs/1406.1078}
+}
+% journal   = {CoRR},
+% volume    = {abs/1406.1078},
+
+%---------------------------------------------------------------------------------
+
+@inproceedings{Bevilacqua-CNN,
 	author = {Antonio Bevilacqua and Kyle MacDonald and Aamina Rangarej and Venessa Widjaya and Brian Caulfield and Tahar Kechadi},
-	title = {{Human Activity Recognition with Convolutional Neural Netowrks}},
-	year = {2019},
+	title = {{Human Activity Recognition with Convolutional Neural Networks}},
+	booktitle = {European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases (ECML-PKDD)},
+	year = {2018},
+	month = sep,
+	location = {Dublin, Ireland},
 	url = {arxiv.org/abs/1906.01935},
 	doi = {10.1007/978-3-030-10997-4_33}
 }
 
 @inproceedings{Chen-SingleAcc,
 	author = {Y. {Chen} and Y. {Xue}},
-	booktitle = {2015 IEEE International Conference on Systems, Man, and Cybernetics},
+	booktitle = {IEEE International Conference on Systems, Man, and Cybernetics (SMC)},
 	title = {{A Deep Learning Approach to Human Activity Recognition Based on Single Accelerometer}},
 	year = {2015},
 	month = oct,
@@ -87,8 +207,10 @@ article{Zordan-2014,
 @inproceedings{FrankNadales,
 	author = {Korbinian Frank and Maria Josefa Vera Nadales and Patrick Robertson and Michael Angermann},
 	title = {{Reliable Real-Time Recognition of motion related human activities using MEMS inertial sensors}},
+	booktitle = {ION GNSS},
 	year = {2010},
-	month = sep
+	month = sep,
+	location = {Portland, OR, USA}
 }
 
 @inproceedings{Hammerla-DeepConvRec,
@@ -96,7 +218,7 @@ article{Zordan-2014,
 	title = {{Deep, Convolutional, and Recurrent Models for Human Activity Recognition Using Wearables}},
 	booktitle = {Proceedings of the 25th International Joint Conference on Artificial Intelligence (IJCAI)},
 	year = {2016},
-	location = {New York, New York, USA},
+	location = {New York, NY, USA},
 	pages = {1533--1540},
 	numpages = {8},
 	isbn = {978-1-57735-770-4},
@@ -105,7 +227,7 @@ article{Zordan-2014,
 
 @inproceedings{Ha-MultiModalCNN,
 	author = {S. {Ha} and J. {Yun} and S. {Choi}},
-	booktitle = {2015 IEEE International Conference on Systems, Man, and Cybernetics},
+	booktitle = {IEEE International Conference on Systems, Man, and Cybernetics (SMC)},
 	title = {{Multi-modal Convolutional Neural Networks for Activity Recognition}},
 	year = {2015},
 	month = oct,
@@ -117,7 +239,7 @@ article{Zordan-2014,
 
 @inproceedings{Ha-MulAccGyro,
 	author = {S. {Ha} and S. {Choi}},
-	booktitle = {2016 International Joint Conference on Neural Networks (IJCNN)},
+	booktitle = {International Joint Conference on Neural Networks (IJCNN)},
 	title = {{Convolutional neural networks for human activity recognition using multiple accelerometer and gyroscope sensors}},
 	year = {2016},
 	month = jul,
@@ -130,7 +252,7 @@ article{Zordan-2014,
 
 @inproceedings{Lee-1dCNNandRF,
 	author = {{Song-Mi Lee} and {Sang Min Yoon} and {Heeryon Cho}},
-	booktitle = {2017 IEEE International Conference on Big Data and Smart Computing (BigComp)},
+	booktitle = {IEEE International Conference on Big Data and Smart Computing (BigComp)},
 	title = {{Human activity recognition from accelerometer data using Convolutional Neural Network}},
 	year = {2017},
 	month = feb,
@@ -143,7 +265,7 @@ article{Zordan-2014,
 
 @inproceedings{Liano-HMM,
 	author = {B. {Florentino-Liaño} and N. {O'Mahony} and A. {Artés-Rodríguez}},
-	booktitle = {2012 3rd International Workshop on Cognitive Information Processing (CIP)},
+	booktitle = {3rd International Workshop on Cognitive Information Processing (CIP)},
 	title = {{Human activity recognition using inertial sensors with invariance to sensor orientation}},
 	year = {2012},
 	month = may,
@@ -183,7 +305,7 @@ article{Zordan-2014,
 
 @inproceedings{Zebin,
 	author = {T. {Zebin} and P. J. {Scully} and K. B. {Ozanyan}},
-	booktitle = {2016 IEEE SENSORS},
+	booktitle = {IEEE SENSORS},
 	title = {{Human activity recognition with inertial sensors using a deep learning approach}},
 	year = {2016},
 	month = oct,
@@ -195,7 +317,7 @@ article{Zordan-2014,
 
 @inproceedings{Zeng-CNN,
 	author = {M. {Zeng} and L. T. {Nguyen} and B. {Yu} and O. J. {Mengshoel} and J. {Zhu} and P. {Wu} and J. {Zhang}},
-	booktitle = {6th International Conference on Mobile Computing, Applications and Services},
+	booktitle = {6th International Conference on Mobile Computing, Applications and Services (MobiCASE)},
 	title = {{Convolutional Neural Networks for human activity recognition using mobile sensors}},
 	year = {2014},
 	month = nov,
@@ -236,11 +358,80 @@ article{Zordan-2014,
 @inproceedings{Altun-IMU,
 	author = {Altun, Kerem and Barshan, Billur},
 	title = {{Human Activity Recognition Using Inertial/Magnetic Sensor Units}},
-	booktitle = {Proceedings of the First International Conference on Human Behavior Understanding},
+	booktitle = {Proceedings of the First International Conference on Human Behavior Understanding (HBU)},
 	year = {2010},
 	isbn = {3-642-14714-3, 978-3-642-14714-2},
 	location = {Istanbul, Turkey},
 	pages = {38--51},
 	numpages = {14},
 	url = {http://dl.acm.org/citation.cfm?id=1881331.1881338},
+}
+
+@inproceedings{Singh-RNN,
+    author    = {Deepika Singh and Erinc Merdivan and Ismini Psychoula and Johannes Kropf and Sten Hanke and Matthieu Geist and Andreas Holzinger},
+    title     = {{Human Activity Recognition using Recurrent Neural Networks}},
+    booktitle = {International Cross-Domain Conference for Machine Learning and Knowledge Extraction},
+    year      = {2018},
+    url       = {http://arxiv.org/abs/1804.07144}
+}
+%journal   = {CoRR},
+%volume    = {abs/1804.07144},
+
+@article{Pienaar-LSTM,
+    author    = {Schalk Wilhelm Pienaar and Reza Malekian},
+    title     = {{Human Activity Recognition Using {LSTM-RNN} Deep Neural Network Architecture}},
+    year      = {2019},
+    url       = {http://arxiv.org/abs/1905.00599}
+}
+%journal   = {CoRR},
+%volume    = {abs/1905.00599},
+
+@article{Ordonez-CNN-LSTM,
+    author = {Ordóñez, Francisco Javier and Roggen, Daniel},
+    title = {{Deep Convolutional and LSTM Recurrent Neural Networks for Multimodal Wearable Activity Recognition}},
+    journal = {Sensors},
+    volume = {16},
+    year = {2016},
+    number = {1},
+    article-number = {115},
+    url = {https://www.mdpi.com/1424-8220/16/1/115},
+    issn = {1424-8220},
+    doi = {10.3390/s16010115}
+}
+
+@article{Guan-LSTM-wearables,
+    author = {Guan, Yu and Plötz, Thomas},
+    title = {{Ensembles of Deep LSTM Learners for Activity Recognition using Wearables}},
+    volume = {1},
+    number = {2},
+    journal = {Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies (IMWUT)},
+    publisher = {Association for Computing Machinery (ACM)},
+    year = {2017},
+    month = jun,
+    pages = {1–28},
+    doi = {10.1145/3090076},
+    issn = {2474-9567}
+}
+
+@article{Arifoglu-RNN-HAR,
+    author = {Arifoglu, Damla and Bouchachia, Hamid},
+    title = {{Activity Recognition and Abnormal Behaviour Detection with Recurrent Neural Networks}},
+    journal = {Procedia Computer Science},
+    year = {2017},
+    month = dec,
+    pages = {86-93},
+    volume = {110},
+    doi = {10.1016/j.procs.2017.06.121}
+}
+
+@inproceedings{Park-DNN-smartmultisensor,
+    author = {J. {Park} and K. {Jang} and S. {Yang}}, 
+    booktitle = {IEEE 4th World Forum on Internet of Things (WF-IoT)}, 
+    title = {{Deep neural networks for activity recognition with multi-sensor data in a smart home}}, 
+    year = {2018}, 
+    month = feb,
+    volume = {}, 
+    number = {}, 
+    pages = {155-160}, 
+    doi = {10.1109/WF-IoT.2018.8355147}
 }

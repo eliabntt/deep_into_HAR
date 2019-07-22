@@ -1,0 +1,22 @@
+%\begin{tabular}{l|cllllllllllllll}\toprule
+%& \multicolumn{2}{c}{\textbf{RUNNING}} & \multicolumn{2}{c}{WALKING} & \multicolumn{2}{c}{\textbf{JUMPING}} & \multicolumn{2}{c}{STANDING} & \multicolumn{2}{c}{SITTING} & \multicolumn{2}{c}{\textbf{LYING}} & \multicolumn{2}{c}{\textbf{FALLING}} \\ \midrule
+%
+%\begin{tabular}{l|ccccccc}\toprule
+%Model  & \labelbox{label-running} & \labelbox{label-walking} & \labelbox{label-jumping} & \labelbox{label-standing} & \labelbox{label-sitting} & \labelbox{label-lying} & \labelbox{label-falling} \\\midrule
+%Conv1D & 97.912~~99.764       & \textbf{98.869}~~99.113 & \textbf{98.990}~~92.019          & 99.325~~\textbf{99.647}          & \textbf{99.879}~~99.698 & 99.369~~\textbf{99.369}       & \textbf{89.796}~~80 \\
+%Conv2D & 96.948~~97.636       & \textbf{98.277}~~98.374 & 90.196~~86.385                   & 98.969~~\textbf{98.940}          & \textbf{98.315}~~98.731 & 99.246~~\textbf{99.622}       & 80~~72.727 \\
+%2LSTM  & 98.601~~\textbf{100} & \textbf{99.407}~~99.162 & \textbf{98.030}~~\textbf{93.427} & 99.149~~\textbf{99.499}          & \textbf{99.697}~~99.517 & 99.873~~\textbf{99.369}       & \textbf{86.441}~~92.727 \\
+%2GRU   & 99.063~~\textbf{100} & \textbf{99.259}~~99.014 & \textbf{95.694}~~\textbf{93.897} & 99.441~~\textbf{99.588}          & \textbf{99.517}~~99.637 & 99.497~~\textbf{99.874}       & \textbf{96}~~87.272 \\
+%Mixed  & 97.465~~\textbf{100} & \textbf{99.407}~~99.211 & \textbf{98.995}~~92.488          & \textbf{99.559}~~\textbf{99.794} & \textbf{99.819}~~99.758 & \textbf{100}~~\textbf{99.874} & \textbf{92.857}~~94.545 \\
+%DLR    & \textbf{100}~~93     & 98~~\textbf{100}        & 93~~93                           & \textbf{100}~~98                 & 97~~100                 & 100~~98                       & 80~~100 \\ \bottomrule
+%\end{tabular}
+%
+\begin{tabular}{l|ccccccc}\toprule
+Model  & \labelbox{label-running} running & \labelbox{label-walking} walking & \labelbox{label-jumping} jumping & \labelbox{label-standing} standing & \labelbox{label-sitting} sitting & \labelbox{label-lying} lying & \labelbox{label-falling} falling \\\midrule
+Conv1D\footnotesize{-2C1D} & 97.91~~99.76 & \textbf{98.87}~~99.11 & \textbf{98.99}~~92.02 & 99.33~~\textbf{99.65}         & \textbf{99.88}~~99.70 & 99.37~~\textbf{99.37}        & \textbf{89.80}~~80.00 \\
+Conv2D-Ha & 96.95~~97.64        & \textbf{98.28}~~98.37 & 90.20~~86.39                   & 98.97~~\textbf{98.94}          & \textbf{98.32}~~98.73 & 99.25~~\textbf{99.62}        & 80.00~~72.73 \\
+TwoLSTM   & 98.60~~\textbf{100} & \textbf{99.41}~~99.16 & \textbf{98.03}~~\textbf{93.43} & 99.15~~\textbf{99.50}          & \textbf{99.70}~~99.52 & \textbf{99.87}~~\textbf{99.37}        & \textbf{86.44}~~92.73 \\
+TwoGRU    & 99.06~~\textbf{100} & \textbf{99.26}~~99.01 & \textbf{95.69}~~\textbf{93.90} & 99.44~~\textbf{99.59}          & \textbf{99.52}~~99.64 & \textbf{99.50}~~\textbf{99.87}        & \textbf{96.00}~~87.27 \\
+CNN-LSTM  & 97.47~~\textbf{100} & \textbf{99.41}~~99.21 & \textbf{98.99}~~92.49          & \textbf{99.56}~~\textbf{99.79} & \textbf{99.82}~~99.76 & \textbf{100}~~\textbf{99.87} & \textbf{92.86}~~94.55 \\
+BN \cite{FrankNadales}  & \textbf{100}~~93    & 98~~\textbf{100}      & 93~~93                         & \textbf{100}~~98               & 97~~100               & 100~~98                      & 80~~100 \\ \bottomrule
+\end{tabular}

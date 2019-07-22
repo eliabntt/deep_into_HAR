@@ -7,29 +7,55 @@
 %\usepackage{algorithm}
 %\usepackage{algorithmicx}
 %\usepackage{algpseudocode}
+\usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[utf8]{inputenc}
-\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
 %\usepackage{mathtools}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{booktabs}
 %\usepackage{import}
-%\usepackage{multirow}
+\usepackage{multirow}
 \usepackage{cite}
 \usepackage[export]{adjustbox}
 \usepackage{breqn}
 %\usepackage{mathrsfs}
 \usepackage{acronym}
-%\usepackage[keeplastbox]{flushend}
+\usepackage[keeplastbox]{flushend}
 \usepackage{setspace}
 \usepackage{bm}
 \usepackage{stackengine}
 
+\usepackage{smartdiagram}
+\usepackage{tikz}
+\usesmartdiagramlibrary{additions}
+
 \usepackage{hyperref}
-\hypersetup{colorlinks} % TODO put usual color
+\definecolor{azure}     {rgb}{0,0.5,1}
+\definecolor{dkpowder}  {rgb}{0,0.2,0.7}
+\definecolor{deepred}   {rgb}{0.7,0,0}
+\definecolor{deepblue}  {rgb}{0,0,0.7}
+\definecolor{deepgreen} {rgb}{0,0.5,0}
+\definecolor{deeporange}{rgb}{0.91, 0.41, 0.17}
+\hypersetup{%
+    pdfpagemode  = {UseOutlines},
+    bookmarksopen,
+    pdfstartview = {FitH},
+    colorlinks,
+    linkcolor = {dkpowder},
+    citecolor = {dkpowder},
+    urlcolor  = {dkpowder},
+}
+
+%\addto\extrasenglish{%
+%  \renewcommand{\sectionautorefname}{Section}%
+%  \renewcommand{\subsectionautorefname}{Subsection}%
+%}
 
 \usepackage{listings}
 \input{listings-def}
@@ -42,9 +68,9 @@
 
 \def\delequal{\mathrel{\ensurestackMath{\stackon[1pt]{=}{\scriptscriptstyle\Delta}}}}
 
-\graphicspath{{../images/}}
+\graphicspath{{images/}}
 \setlength{\belowcaptionskip}{0mm}
-\setlength{\textfloatsep}{8pt}
+\setlength{\textfloatsep}{7pt}
 
 \newcommand{\eq}[1]{Eq.~\eqref{#1}}
 \newcommand{\fig}[1]{Fig.~\ref{#1}}
@@ -53,11 +79,12 @@
 
 \newcommand\MR[1]{\textcolor{blue}{#1}}
 \newcommand\red[1]{\textcolor{red}{#1}}
+\newcommand\comment[1]{\textcolor{ForestGreen}{[#1]}}
 
 %\renewcommand{\baselinestretch}{0.98}
 %\renewcommand{\bottomfraction}{0.8}
 %\setlength{\abovecaptionskip}{0pt}
-\setlength{\columnsep}{0.2in}
+\setlength{\columnsep}{0.1in}
 
 % fix for when no cite is in document but want bib to be shown
 \makeatletter
@@ -66,7 +93,23 @@
   \endlist}
 \makeatother
 
+% label colors
+\definecolor{label-running} {RGB}{ 31,119,180}
+\definecolor{label-walking} {RGB}{255,127, 14}
+\definecolor{label-jumping} {RGB}{ 44,160, 44}
+\definecolor{label-standing}{RGB}{148,103,189}
+\definecolor{label-sitting} {RGB}{140, 86, 75}
+\definecolor{label-lying}   {RGB}{127,127,127}
+\definecolor{label-falling} {RGB}{188,189, 34}
+\definecolor{label-transit} {RGB}{ 23,190,207}
+
+% pass the color to draw the box
+\newcommand{\labelbox}[1]{%
+    \raisebox{1.6pt}{\fcolorbox{black}{#1}{\rule[2.5pt]{5pt}{0pt}}}
+}
+
 % \IEEEoverridecommandlockouts\IEEEpubid{\makebox[\columnwidth]{PUT COPYRIGHT NOTICE HERE \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
+\frenchspacing
 \IEEEoverridecommandlockouts
 
 \title{Going deep into Human Activity Recognition}
@@ -84,40 +127,34 @@
 \begin{document}
 
 \maketitle
+%\thispagestyle{plain} % forced page numbers. TO DELETE before delivery
+%\pagestyle{plain} % forced page numbers. TO DELETE before delivery
 
 \begin{abstract}
-TODO
-
-\MR{This is a sample abstract, just to show you an example. It is $204$ words long, I would say an abstract should not be longer than $250$ words and some Transactions journals of the IEEE are currently putting a strict limit of $200$ words. Here, you should briefly state:
-\begin{enumerate}
-\item the technical scenario/field of research and its timeliness/relevance in general,
-\item what you do in the report/paper and why it is important, how it advances the state of the art in its field,
-\item summarize the main and best results of your study/proposal/method,
-\item (optional) how others could benefit from your results for further research, or within commercial products.
-\end{enumerate}
-The abstract should be written in a way that motivates the reader to delve into the paper, but at the same time it should contain enough information to deliver the main message about the paper, so that the reader will now what he/she canfind in the paper even without reading it (as it is the case most of the times). The abstract is a mini-paper on its own and, as such, is a major endeavor to write.}\\
-
-\red{I suggest to write the Abstract at the end, as the very last thing.}
+In latest years, thanks to the increased number of smartphones and wearable devices integrating IMUs, Human Activity Recognition (HAR) has become a key research topic in monitored and assisted living either for medical or tracking reasons.
+First attempts provided manual feature crafting, followed by analysis done either with deep neural networks or other approaches like Hidden Markov models.
+More recently instead, direct analysis on raw signals has been attempted.
+Here we continue this trend by exploring some possible approaches with convolutional and recurrent neural networks and look over automatic feature extraction techniques, such as autoencoders.
+Most of the datasets in this fields are highly unbalanced and some classes lack of enough data.
+To face this, we propose two augmentation techniques for rebalancing.
+Finally, we introduce new ways and metrics to select the best learning epoch to address overfitting and get the best learning results overall.
+Our tests confirm that augmenting the initial dataset is worth the effort, and we achieve performance that surpass what is declared for it.
+Moreover, we discovered that working with raw signals in the sensor reference frame is better than working with their trasformation to the body frame. 
+As for encoded data by the means of our autoencoders, we could not find any performance improvement: in some cases, worse results are obtained.
 \end{abstract}
 
-\IEEEkeywords
-TODO
-\MR{A list of keywords defining the tools and the scenario. I would not go beyond {\it six} keywords.}
-\endIEEEkeywords
-
+\begin{IEEEkeywords}
+Activity recognition, inertial sensors, machine learning, neural networks, autoencoders, deep classification
+%\MR{A list of keywords defining the tools and the scenario. I would not go beyond {\it six} keywords.}
+\end{IEEEkeywords}
 
 \input{intro}
-
 \input{related}
-
 \input{model}
-
 \input{results}
-
 \input{conclusions}
 
-\nocite{*} % comment to see only cited papers in bib
+%\nocite{*} % comment to see only cited papers in bib
 \bibliographystyle{IEEEtran}
 \bibliography{biblio}
-
 \end{document}

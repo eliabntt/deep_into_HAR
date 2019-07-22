@@ -1,24 +1,37 @@
-% !TEX root = template.tex
+% !TEX root = report.tex
 
 \section{Introduction}
 \label{sec:introduction}
 
-\red{Maximum length for the whole report is 9 pages. Abstract, introduction and related work should take max two pages.}\\
+%\red{Max len 9 pages. Abstract, intro and related max 2 pages.}\\
 
-\MR{A good way of structuring the introduction is as follows: 
+%\IEEEPARstart{P}{hysical}
+Physical activities recognition, commonly referred as Human Activity Recognition (HAR), has gained momentum as a key research area nowadays.
+Tracking and detecting human activities is a relevant task for both trained personnel, e.g. first responders and medical or military services, and for common people: for fitness reasons, for prevention or quick notification of falls, for example in case of elderly people assistance.% and monitoring.
+
+HAR can be performed visually with the aid of many cameras pointed to track people motion but this approach has privacy issues and only works in restricted or indoor areas.
+Instead, the use of inertial sensors (IMUs) worn by the users has less drawbacks, it is more robust (for example, it does not rely on the field of view of the camera), cheap and more ubiquitously deployable thanks to the huge spreading of sensor-equipped smartphones and watches~\cite{Wang-survey}.
+IMUs are typically composed of accelerometers, gyroscopes and magnetometers that sense and periodically sample linear acceleration, angular velocity and magnetic field variations in the three spatial directions, all within the size of an open hand.
+To analyze and classify the data stream offered by these sensors, \textit{features} extraction is needed and can be performed both manually, as in the traditional approach by means for example of the Fourier transform (FFT)~\cite{FrankNadales} or statistical analysis, or by automatic learning through neural network (NN) architectures, a rising trend in the literature~\cite{Wang-survey}.
+
+In this work, we focus on a specific dataset to evaluate the current state of the art, comparing deep networks composed of convolutional and recurrent layers, and we propose some new architectures made as a combination of the previous models or built around the autoencoder (AE) concept to enable automatic feature extraction.
+Furthermore, we introduce some balancing techniques for the dataset, trying to achieve better results overall.
+Our proposals perform better with respect to the state of the art on the considered dataset.
+We also manage to use a lighter version than the original proposal for some of the considered networks. 
+%\comment{Our proposals are in some cases better than the original architecture in terms of size and efficiency and perform better w.r.t. the state of the art on the considered dataset.}
+Implementation is modular, to allow for the use with other datasets, and open-source on \href{https://github.com/eliabntt/hda-project}{GitHub}, to allow external contributions and future developments.
+
+This work's contributions can be summarized in:
 \begin{itemize}
-\item \textbf{General (short) intro:} One paragraph to introduce your work, describing the scenario {\it at large}, its relevance, to prepare the reader to what follows and convince her/him that the paper focuses on an important setup / problem. Please keep this part short (I usually do five to eight lines), as this part is rather standard, \textbf{but} at the same time it has to be there. 
-\item \textbf{Put the problem into perspective:} A second paragraph where you immediately delve into the specific problem that you are tackling, starting to point the finger towards your contribution. Here, you describe the importance of such problem, providing examples (citing papers from the literature, possibly recent ones) of previous solutions attempts, and of why these failed {\it to provide a complete answer}. This second paragraph should not be too long, as otherwise the reader will get bored and will abandon your paper... It should be concisely written, something like 5 to 10 lines.
-\item \textbf{Present the paper contribution:} A third paragraph were you state what you do in the paper, this should also be concisely written. A good rule of thumb is to make it max 10/15 lines. Here, you should state up front:
-\begin{enumerate}
-\item the problem at stake, 
-\item the relevance of what you propose, 
-\item the technique you use, possibly underlying its novelty, efficiency, 
-\item underline the value/novelty of your proposal, referencing (recent) papers from the literature,
-\item tell the reader how she/he can take advantage of your work, e.g., how your work/results can be reused/exploited to achieve further scientific, technical or practical goals.
- \end{enumerate}
-\item \textbf{Summary of contributions:} After this, you may want to provide an itemized list to summarize the paper contributions. Rule of thumb: from three to six items, from three to four lines each.
-\item \textbf{Closing (paper structure):} You finish up by detailing the paper structure, this should be three to four lines. It is customary to do so, although I admit it may be of little use. It usually goes like: {\it ``This report (paper) is structured as follows. In Section II we describe the state of the art, the system and data models are respectively expounded in Sections~III and~IV. The proposed signal processing technique is presented in Section~V and its performance evaluation is carried out in Section~VI.''}\\
-\end{itemize}}
+    \item probing usefulness of sensor's frame signal processing
+    %\item defining new models as composition of the previous ones, with an eye on taking the best properties from both convolutional and recurrent layers
+    \item exploring data augmentation techniques that push forward prediction accuracy
+    \item defining and combining (new) models based on established networks that can classify activities from inertial sensor's raw measurements
+    \item exploring new metrics to select the best training epoch for models, different from standard setups
+    \item making use of the autoencoder architecture to extract features to be fed to deep networks, support vector machines and logistic regression
+\end{itemize}
 
-\MR{Lately, I tend to write introduction plus abstract within a single page. This forces me to focus on the important messages that I want to deliver about the paper, leaving out all the blah blah. \textbf{Remember:} 1) {\it less is more}, 2) writing a compact ({\it snappy}) piece of technical text is much more difficult than writing with no space constraints.}
+This report is structured as follows.
+In \autoref{sec:related_work} we review the current state of the art.
+Our system's pipeline is defined in \autoref{sec:processing_pipeline}, preprocessing steps on the original signals' data of the reference dataset are detailed in \autoref{sec:model}.
+Analyzed architectures and learning parameters are presented in \autoref{sec:learning_framework}, while in \autoref{sec:results} we outline our results.
