@@ -1,0 +1,13 @@
+\definecolor{label-running} {RGB}{ 31,119,180}
+\definecolor{label-walking} {RGB}{255,127, 14}
+\definecolor{label-jumping} {RGB}{ 44,160, 44}
+\definecolor{label-standing}{RGB}{148,103,189}
+\definecolor{label-sitting} {RGB}{140, 86, 75}
+\definecolor{label-lying}   {RGB}{127,127,127}
+\definecolor{label-falling} {RGB}{188,189, 34}
+\definecolor{label-transit} {RGB}{ 23,190,207}
+
+% pass the color to draw the box
+\newcommand{\labelbox}[1]{%
+    \raisebox{1.6pt}{\fcolorbox{black}{#1}{\rule[2.5pt]{5pt}{0pt}}}\quad
+}

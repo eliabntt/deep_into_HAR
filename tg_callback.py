@@ -1,4 +1,5 @@
 import json
+import os
 import telepot
 from tensorflow.keras.callbacks import Callback
 
@@ -7,6 +8,10 @@ class TelegramCallback(Callback):
 
     def __init__(self, name=None, verbose=False):
         super(TelegramCallback, self).__init__()
+        if not os.path.exists('tg_config.json'):
+            self.disabled = True
+            return
+        self.disabled = False
         with open('tg_config.json','r') as confFile:
             config = json.load(confFile)
         self.users = config['users']
@@ -18,6 +23,7 @@ class TelegramCallback(Callback):
         self.verbose = verbose
 
     def send_message(self, text):
+        if self.disabled: return
         for user in self.users:
             try:
                 self.bot.sendMessage(user, text)
