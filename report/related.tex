@@ -9,7 +9,7 @@ Features are extracted using filters, Fourier transforms, moments or other stati
 In this case a heavy preprocessing phase is needed, and these manual features, apart from being most often poorly generalizable, may exclude some important information that can only be extracted by using automatic methods~\cite{Wang-survey}.
 Moreover, these methods focus mainly on single-sequence classification, often lacking the study of the temporal correlation between signals since they rely on per-sequence handcrafted features~\cite{Hammerla-DeepConvRec}.
 Recent advances in machine learning paved the way to raw signal analysis, automatic feature extraction and classification. In this regard, Wang \textit{et al.}~\cite{Wang-survey} very recently surveyed the literature collecting both model architectures and popular datasets.
-%The precedent outdated survey on the topic was redacted by Lara and Labrador~\cite{Lara-Survey-Wearable}, and stops the review of NNs to dense multi-layer perceptrons (MLP), 
+%The precedent outdated survey on the topic was redacted by Lara and Labrador~\cite{Lara-Survey-Wearable}, and stops the review of NNs to dense multi-layer perceptrons (MLP),
 %dedicating most of the work on more traditional approaches.
 %while Bulling \textit{et al.}~\cite{Bulling-Tutorial} authored a broad tutorial exposing relevant research challenges, introducing a framework to design and evaluate activity recognition systems.
 
@@ -29,9 +29,9 @@ Thanks to this, recurrent modules are good learners for IMU sensor's data that c
 Both LSTM and GRU have been developed to avoid the vanishing/exploding gradient problem of RNNs, and the difference between them is the number of available \textit{update} gates.
 
 In this field most works use LSTM networks~\cite{Guan-LSTM-wearables}.
-Simple vanilla approaches like stacking LSTM gates one after another showed an improvement over previous CNNs methods thanks to their relation to time sequences, even if working on plain raw signals. 
+Simple vanilla approaches like stacking LSTM gates one after another showed an improvement over previous CNNs methods thanks to their relation to time sequences, even if working on plain raw signals.
 An alternative is to use a \textit{bidirectional} network, that is, two LSTMs layers working one on the original sequence (learning from future) and the other one on the reversed version (learning from past), trying to be more robust and essentially doing data augmentation inside the network~\cite{Hammerla-DeepConvRec}.
 This approach is the less adopted because it is highly dependant on the number of units of the LSTM cell and so to the input size and the different datasets.
 Last, experiments mixing convolutional layers before LSTM(s) classification layers took place~\cite{Ordonez-CNN-LSTM}.
-Taking advance from both representation brought by CNNs and temporal dependency by RNNs, results show an improvement with respect to previous methods: a proof that feature extraction techniques before RNNs could be a way to obtain major improvements on HAR and other time-related tasks. 
-GRU layers have been less used for this task, probably because they showed lower overall performances\cite{Park-DNN-smartmultisensor,Arifoglu-RNN-HAR}.
+Taking advance from both representation brought by CNNs and temporal dependency by RNNs, results show an improvement with respect to previous methods: a proof that feature extraction techniques before RNNs could be a way to obtain major improvements on HAR and other time-related tasks.
+GRU layers have been less used for this task, probably because they showed lower overall performance\cite{Park-DNN-smartmultisensor,Arifoglu-RNN-HAR}.

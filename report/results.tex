@@ -18,7 +18,7 @@ Note that for Keras models and scikit-learn's SGD implementations accuracy equal
 %The complete set of results can be generated using the publicly available companion notebook.
 
 \subsection{Reference frame}
-Comparing the same networks, trained over the same type of dataset, we can note how performances are superior with sensor-referenced data, instead of using data referenced to the body frame, and it is easy to see how even plain global accuracy is lower on such datasets, an example is in \tab{tab:body_sensor}.
+Comparing the same networks, trained over the same type of dataset, we can note how performance are superior with sensor-referenced data, instead of using data referenced to the body frame, and it is easy to see how even plain global accuracy is lower on such datasets, an example is in \tab{tab:body_sensor}.
 This is a surprising aspect because the coordinate transformation should act as a stabilizer to equalize measurements and generalize them as noted in~\cite{Liano-HMM}.
 
 \begin{table}[ht]
@@ -31,7 +31,7 @@ This is a surprising aspect because the coordinate transformation should act as 
 \subsection{Normalization}
 As common practice suggest we performed normalization on datasets using training set's mean and standard deviation.
 In general, by looking at global accuracy, there is no strict rule to say that using it is better than leaving data as is.
-The results are so near that could even be linked to stochasticity of trainings and to highly unbalanced classes.
+The results are so near that could even be linked to stochasticity of trainings and to highly imbalanced classes.
 From \tab{tab:norm-aug} we can note how there are cases like CNN-LSTM and SADA(n) where normalized dataset goes better, and cases like TwoGRU and SAHC(n) where it is the opposite.
 So we cannot come up with a definitive answer for this normalization question.
 
@@ -143,7 +143,7 @@ Training of autoencoders is good and fast: as reported in \tab{tab:ae_train}, th
 \end{table}
 
 Instead, application of encoded data to the networks have not brought the expected improvements in any datasets or methods we used.
-In general we noted comparable, and in some cases slightly lower, performances than the same networks trained on the original dataset. A few examples can be seen in \tab{tab:ae_comp}.
+In general we noted comparable, and in some cases slightly lower, performance than the same networks trained on the original dataset. A few examples can be seen in \tab{tab:ae_comp}.
 
 \begin{table}[ht]
 \centering
@@ -154,7 +154,7 @@ In general we noted comparable, and in some cases slightly lower, performances t
 
 Apart from being time costly to permute all of them, applications of SVM and LR in combination with L1, L2 and Elastic Net regularization terms do not provide good results: models tend to well learn long and stable activities, while being worse with \textit{running}, \textit{jumping} or \textit{falling} (see \fig{fig:cm-svm-sahc-mixed}).
 We reached a top value of 90\% global test accuracy on a specific combination of AE and LR model.
-Furthermore, there is no clear linking between performances and LR or SVM or with respect to regularization terms, which makes essential to loop all combinations to see the best one.
+Furthermore, there is no clear linking between performance and LR or SVM or with respect to regularization terms, which makes essential to loop all combinations to see the best one.
 
 \begin{figure}
     \centering

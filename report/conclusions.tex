@@ -3,7 +3,7 @@
 \label{sec:conclusions}
 
 We delved into HAR testing combinations of learning methods and datasets.
-We found both the applied preprocessing steps %(i.e. augmentation and normalization) 
+We found both the applied preprocessing steps %(i.e. augmentation and normalization)
 to be useful, especially the augmentation techniques.
 Many more of them can be applied, like adding noise to existing data, several ADASYN variations, more effective manual operations or with different quantities and class relative percentages.
 Moreover, it is not clear enough whether normalization is necessary and useful in this particular case.
@@ -13,7 +13,7 @@ Transformations between sensor and body frames are probably much more effective 
 If this trend is confirmed, it would be interesting, in a multi-sensor scenario, to separately classify activities for each sensor and then merge together the results.
 
 Evaluations evidenced the mixed convolutional--recurrent architecture to be the best network to tackle the problem.
-This confirms that mixing architectures is a promising way to proceed both in terms of of performances and time efficiency, which is greatly reduced despite having recurrent cells.
+This confirms that mixing architectures is a promising way to proceed both in terms of performance and time efficiency, which is greatly reduced despite having recurrent cells.
 Our architecture is smaller than the one defined in \cite{Ordonez-CNN-LSTM}, pointing out a possible reduction also on their use case.%, and a possible lack of tuning by our side.
 
 We also used autoencoders made of several kind of layers to extract features but results did not improve upon previous findings and we obtained worse results using SVMs and LR.
