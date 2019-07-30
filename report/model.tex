@@ -355,7 +355,7 @@ Mathematically,
 %          & Neg & FP  & TN  \\\bottomrule
 %\end{tabular}
 
-Because of the imbalaced dataset, overall accuracy may be misleading since less frequent classes have low impact on the final value, even if for example classification for these samples fails most of the times.
+Because of the imbalanced dataset, overall accuracy may be misleading since less frequent classes have low impact on the final value, even if for example classification for these samples fails most of the times.
 This is enhanced by the fact that test set cannot be augmented.
 Because of that, we will focus both on global and per-class metrics, hoping to find a model that maximize each of accuracy values. %, and on loss, that also gives important insights on overfitting.
 
@@ -369,7 +369,7 @@ We introduced these metrics in the training and evaluation phases for all our mo
 Additionally, the model is also saved when at the end of an epoch accuracy is not higher but near current maximum, and loss is lower than the current stored value.
 
 We choose the sum strategy to globally account for each of the metrics.
-We understand that having a precise scope for the work, for example like fall detection\footnote{Fall detection may be re-thinked as a binary classification problem.}, this reasoning may change a lot, due to possible allowance of false positives and absolute inadmissibility of false negatives.
+We understand that having a precise scope for the work, for example like fall detection\footnote{Fall detection may be re-thought as a binary classification problem.}, this reasoning may change a lot, due to possible allowance of false positives and absolute inadmissibility of false negatives.
 But this is a general work without a detailed scope, and it is indifferent for our objectives to have higher precision or recall.
 
 We choose the division by the loss to account for the fact that it is also an important value to track during training: more often a model with slightly less accuracy but lower loss is more powerful than a model with slightly higher accuracy and high loss.

@@ -5,9 +5,9 @@
 
 %\red{Max len 9 pages. Abstract, intro and related max 2 pages.}\\
 
-%\IEEEPARstart{P}{hysical}
-Physical activities recognition, commonly referred as Human Activity Recognition (HAR), has gained momentum as a key research area nowadays.
-Tracking and detecting human activities is a relevant task for both trained personnel, e.g. first responders and medical or military services, and for common people: for fitness reasons, for prevention or quick notification of falls, for example in case of elderly people assistance.% and monitoring.
+%Physical
+\IEEEPARstart{P}{hysical} activities recognition, commonly referred as Human Activity Recognition (HAR), has gained momentum as a key research area nowadays.
+Tracking and detecting human activities is a relevant task for both trained personnel, e.g. first responders and medical or military services, and for common people: for fitness, for prevention or quick notification of falls, for example in case of elderly people assistance.% and monitoring. fitness reasons
 
 HAR can be performed visually with the aid of many cameras pointed to track people motion but this approach has privacy issues and only works in restricted or indoor areas.
 Instead, the use of inertial sensors (IMUs) worn by the users has less drawbacks, it is more robust (for example, it does not rely on the field of view of the camera), cheap and more ubiquitously deployable thanks to the huge spreading of sensor-equipped smartphones and watches~\cite{Wang-survey}.
@@ -17,9 +17,9 @@ To analyze and classify the data stream offered by these sensors, \textit{featur
 In this work, we focus on a specific dataset to evaluate the current state of the art, comparing deep networks composed of convolutional and recurrent layers, and we propose some new architectures made as a combination of the previous models or built around the autoencoder (AE) concept to enable automatic feature extraction.
 Furthermore, we introduce some balancing techniques for the dataset, trying to achieve better results overall.
 Our proposals perform better with respect to the state of the art on the considered dataset.
-We also manage to use a lighter version than the original proposal for some of the considered networks. 
+We also manage to use a lighter version than the original proposal for some of the considered networks.
 %\comment{Our proposals are in some cases better than the original architecture in terms of size and efficiency and perform better w.r.t. the state of the art on the considered dataset.}
-Implementation is modular, to allow for the use with other datasets, and open-source on \href{https://github.com/eliabntt/hda-project}{GitHub}, to allow external contributions and future developments.
+Implementation is modular, to allow for the use with other datasets, and open-source on \href{https://github.com/eliabntt/deep_into_HAR}{GitHub}, to allow external contributions and future developments.
 
 This work's contributions can be summarized in:
 \begin{itemize}
@@ -35,3 +35,4 @@ This report is structured as follows.
 In \autoref{sec:related_work} we review the current state of the art.
 Our system's pipeline is defined in \autoref{sec:processing_pipeline}, preprocessing steps on the original signals' data of the reference dataset are detailed in \autoref{sec:model}.
 Analyzed architectures and learning parameters are presented in \autoref{sec:learning_framework}, while in \autoref{sec:results} we outline our results.
+\IEEEpubidadjcol
